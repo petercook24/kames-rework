@@ -95,9 +95,14 @@ public class ClientDispatcher implements Runnable {
                 break;
 
             case "/S":
-                String tableCard = msg.split(" ")[1];
-                String playerCard = msg.split(" ")[2];
-                chat1.switchTableCardWith(tableCard, playerCard, this);
+                if(msg.trim().length() > 5){
+                    chat1.broadcast(Messager.getChatInvalidSwitchCommmandMessage(nickName));
+                    return;
+                }
+                String tableCardValue = msg.split(" ")[1];
+                String playerCardValue = msg.split(" ")[2];
+                chat1.switchTableCardWith(tableCardValue, playerCardValue, this);
+                chat1.broadcast(Messager.getChatPlayerTryingToSwitchMessage(nickName, tableCardValue, playerCardValue));
 
             case "/HELP":
                 //sendCommandList();

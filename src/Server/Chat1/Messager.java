@@ -49,4 +49,13 @@ public class Messager {
         return "message sent to: " + nickname;
     }
 
+    public static String getChatInvalidSwitchCommmandMessage(String nickName){
+        return  nickName + ", you inserted an invalid switch command! ";
+    }
+
+    public static String getChatPlayerTryingToSwitchMessage(String nickName, String tableCardValue, String playerCardValue) {
+
+        return nickName + " is trying to switch table card --> " + tableCardValue + " with player card --> "
+                + playerCardValue;
+    }
 }
