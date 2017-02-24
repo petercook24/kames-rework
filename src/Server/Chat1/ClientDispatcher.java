@@ -16,7 +16,7 @@ public class ClientDispatcher implements Runnable {
     private InetAddress ip; //TODO: DO I REALLY NEED IT?
     private String nickName;
     private String team;
-    private boolean connected;
+    private int roundsWon;
 
 
     public ClientDispatcher(Socket clientSocket, Chat1 chat1) {
@@ -24,10 +24,10 @@ public class ClientDispatcher implements Runnable {
         try {
             this.chat1 = chat1;
             this.clientSocket = clientSocket;
+            roundsWon = 0;
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             ip = clientSocket.getInetAddress();
-            connected = true;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,7 +47,7 @@ public class ClientDispatcher implements Runnable {
 
             String msg = in.readLine();
 
-            while (msg != null || !connected) {
+            while (msg != null) {
 
                 System.out.println(Messager.getServerReceivedFromMessage(nickName, msg));
 
@@ -70,9 +70,6 @@ public class ClientDispatcher implements Runnable {
 
     private void treatMessage(String msg) {
 
-        System.out.println("treating message");
-        System.out.println("msg is = " + msg);
-
         if (msg == null) {
             System.out.println("DISCONECTING");
             chat1.disconnect(this);
@@ -83,49 +80,29 @@ public class ClientDispatcher implements Runnable {
 
         switch (command) {
 
-            case "QUIT":
+            case "/QUIT":
                 chat1.disconnect(this);
                 break;
 
-            case "POKE":
-                //TODO case msg starts with POKE
-                break;
-
-            case "PM":
-                String user = msg.split(" ")[1];
-                String finalMessage = msg.substring(command.length() + user.length() + 2);//SPACES THAT ARE NOT COUNTED
-
-                if (user == null) {
-                    sendMessage(Messager.getClientNoUserErrorMessage());
-                    break;
-                }
-                if (!chat1.clientExists(user)) {
-                    sendMessage(Messager.getClientInvalidUserErrorMessage(user));
-                    break;
-                }
-                chat1.sendPrivateMessageTo(user, finalMessage);
-                break;
-
-            case "LIST":
+            case "/LIST":
                 chat1.sendOnlineList(this);
                 break;
 
-            case "HELP":
-                //sendCommandList();
+            case "/K":
+            case "/C":
+                chat1.broadcast(msg);
+                chat1.endGame(this, command);
                 break;
 
-
+            case "/HELP":
+                //sendCommandList();
+                break;
         }
     }
 
 
     private boolean isMessageIrregular(String msg) {
-        return (msg == null ||
-                msg.length() == 0) ||
-                msg.startsWith("QUIT") ||
-                msg.startsWith("POKE") ||
-                msg.startsWith("PM") ||
-                msg.startsWith("LIST");
+        return msg == null || msg.length() == 0 || msg.startsWith("/");
     }
 
 
@@ -162,6 +139,10 @@ public class ClientDispatcher implements Runnable {
 
     public String getTeam(){
         return team;
+    }
+
+    public void win(){
+        roundsWon++;
     }
 }
 

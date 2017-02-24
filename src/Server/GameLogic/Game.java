@@ -37,6 +37,7 @@ public class Game {
     private Deck deck;
     private HashMap<ClientDispatcher, Hand> players;
     private Hand tableHand; //SHARED MUTABLE STATE
+    private int roundsPlayed;
 
 
     public void init() {
@@ -52,7 +53,9 @@ public class Game {
 
     }
 
-   public void start() {
+   public void startNewGame() {
+
+       roundsPlayed = 0;
        showForbiddenCard();
        giveInitialCardsToPlayers();
        startNewTurn();
@@ -68,14 +71,14 @@ public class Game {
         startNewTurn();
     }
 
-    public void endGame(ClientDispatcher player, String endCommand) {
+    public void endGame(ClientDispatcher player, String endGameCommand) {
 
         ClientDispatcher enemy1 = null;
         ClientDispatcher enemy2 = null;
+        ClientDispatcher partner = getPartner(player);
 
         for (ClientDispatcher iPlayer : getPlayersSet()) {
-            if (iPlayer.getTeam() != player.getTeam()) {
-
+            if (iPlayer != player && iPlayer != partner) {
                 if (enemy1 == null) {
                     enemy1 = iPlayer;
                     continue;
@@ -84,17 +87,17 @@ public class Game {
             }
         }
 
-        if (endCommand.equals("KAMES")) {
-            if (hasKames(getPartner(player))) {
-                winRound(player, getPartner(player));
+        if (endGameCommand.equals("/K")) {
+            if (hasKames(partner)) {
+                winRound(player, partner);
                 return;
             }
             winRound(enemy1, enemy2);
             return;
         }
-        if (endCommand.equals("CORTA")) {
+        if (endGameCommand.equals("/C")) {
             if (hasKames(enemy1) || hasKames(enemy2)) {
-                winRound(player, getPartner(player));
+                winRound(player, partner);
                 return;
             }
             winRound(enemy1, enemy2);
@@ -148,6 +151,42 @@ public class Game {
 
     public Set<ClientDispatcher> getPlayersSet() {
         return players.keySet();
+    }
+
+    private boolean hasKames(ClientDispatcher player){
+
+        String referenceValue = "";
+
+        for (Card iCard : players.get(player).getActiveCards()){
+            if(referenceValue.isEmpty()){
+                referenceValue = iCard.getValue();
+                continue;
+            }
+            if(!iCard.getValue().equals(referenceValue)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private ClientDispatcher getPartner(ClientDispatcher player){
+
+        String playerTeam = player.getTeam();
+
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+            if (iPlayer != player && iPlayer.getTeam().equals(playerTeam)){
+                return iPlayer;
+            }
+        }
+        System.err.println("SOMETHING WENT TERRIBLY WRONG GETTING PARTNER");
+        return null;
+    }
+
+
+    private void winRound(ClientDispatcher player, ClientDispatcher partner) {
+        player.win();
+        partner.win();
+        roundsPlayed++;
     }
 
 

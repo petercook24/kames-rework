@@ -72,7 +72,7 @@ public class Chat {
             }
 
         } catch (IOException e) {
-            System.out.println("Unable to start port at: " + PORT_NUMBER);
+            System.out.println("Unable to startNewGame port at: " + PORT_NUMBER);
         }
     }
 

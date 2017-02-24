@@ -140,7 +140,7 @@ public class ClientDispatcher implements Runnable {
     }
 
     /**
-     * Setups the teams so the game can start.
+     * Setups the teams so the game can startNewGame.
      * 1 - Waits for the 4 players
      * 2 - Calls the chat server method to setup the partners for each player
      * 3 - Writes out to the players who are their partners.

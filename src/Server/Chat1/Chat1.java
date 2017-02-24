@@ -46,7 +46,7 @@ public class Chat1 {
                 connectedUsers++;
                 initClientDispatcher(clientSocket);
                 if(connectedUsers == 4){
-                    setSignal();
+                    setSignal(); //TODO: setSignal()
                 }
             }
 
@@ -130,5 +130,9 @@ public class Chat1 {
         clientDispatcher.sendMessage(Messager.getClientDisconnectedMessage());
         broadcast(Messager.getChatDisconnectedMessage(clientDispatcher.getNickName()));
         System.out.println(Messager.getServerDisconnectedMessage(clientDispatcher.getNickName()));
+    }
+
+    public void endGame(ClientDispatcher player, String endGameCommand){
+        game.endGame(player, endGameCommand);
     }
 }
