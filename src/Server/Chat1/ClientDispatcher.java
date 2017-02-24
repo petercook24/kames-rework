@@ -94,9 +94,16 @@ public class ClientDispatcher implements Runnable {
                 chat1.endGame(this, command);
                 break;
 
+            case "/S":
+                String tableCard = msg.split(" ")[1];
+                String playerCard = msg.split(" ")[2];
+                chat1.switchTableCardWith(tableCard, playerCard, this);
+
             case "/HELP":
                 //sendCommandList();
                 break;
+            default:
+
         }
     }
 
@@ -129,19 +136,19 @@ public class ClientDispatcher implements Runnable {
         return nickName;
     }
 
-    public void setTeam(int connectionNb){
-        if (connectionNb%2 != 0){
+    public void setTeam(int connectionNb) {
+        if (connectionNb % 2 != 0) {
             team = "TEAM 1";
             return;
         }
         team = "TEAM 2";
     }
 
-    public String getTeam(){
+    public String getTeam() {
         return team;
     }
 
-    public void win(){
+    public void win() {
         roundsWon++;
     }
 }

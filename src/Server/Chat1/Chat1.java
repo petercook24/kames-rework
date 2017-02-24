@@ -1,5 +1,6 @@
 package Server.Chat1;
 
+import Server.GameLogic.Card;
 import Server.GameLogic.Game;
 import Server.GameLogic.Hand;
 
@@ -45,7 +46,7 @@ public class Chat1 {
 
                 connectedUsers++;
                 initClientDispatcher(clientSocket);
-                if(connectedUsers == 4){
+                if (connectedUsers == 4) {
                     setSignal(); //TODO: setSignal()
                 }
             }
@@ -132,7 +133,62 @@ public class Chat1 {
         System.out.println(Messager.getServerDisconnectedMessage(clientDispatcher.getNickName()));
     }
 
-    public void endGame(ClientDispatcher player, String endGameCommand){
+    public void endGame(ClientDispatcher player, String endGameCommand) {
         game.endGame(player, endGameCommand);
+    }
+
+    public void switchTableCardWith(String tableCardValue, String playerCardValue, ClientDispatcher player) {
+
+
+        Hand playerHand = game.getPlayersMap().get(player);
+        Card playerCard;
+        Card tableCard;
+
+        if (playerHasCard(playerCardValue, playerHand) && tableHasCard(tableCardValue)) {
+            playerCard = getPlayerCard(playerCardValue, playerHand);
+            tableCard = getTableCard(tableCardValue);
+
+            synchronized (game.getTableHand()) {
+                game.switchTableCardWith(tableCard, playerCard);
+            }
+        }
+    }
+
+    private boolean playerHasCard(String playerCardValue, Hand playerHand) {
+        for (Card iCard : playerHand.getActiveCards()) {
+            if (iCard.getValue().equals(playerCardValue)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Card getPlayerCard(String playerCardValue, Hand playerHand){
+        for (Card iCard : playerHand.getActiveCards()) {
+            if (iCard.getValue().equals(playerCardValue)){
+                return iCard;
+            }
+        }
+        System.err.println("SOMETHING REALLY WRONG GETTING EXISTING PLAYER'S CARD");
+        return null;
+    }
+
+    private boolean tableHasCard(String tableCardValue) {
+        for (Card iCard : game.getTableHand().getActiveCards()) {
+            if (iCard.getValue().equals(tableCardValue)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Card getTableCard(String tableCardValue){
+        for (Card iCard : game.getTableHand().getActiveCards()) {
+            if (iCard.getValue().equals(tableCardValue)) {
+                return iCard;
+            }
+        }
+        System.err.println("SOMETHING REALLY WRONG GETTING EXISTING TABLE CARD");
+        return null;
     }
 }
