@@ -1,29 +1,30 @@
 package Server.Chat1;
 
+import Server.GameLogic.Game;
+import Server.GameLogic.Hand;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
  * Created by codecadet on 15/02/17.
  */
-public class Chat {
+public class Chat1 {
 
     public static final int PORT = 8080;
     public static final int MAX_USERS = 4;
-    private final List<ClientDispatcher> clientDispatcherList;//SHARED MUTABLE STATE
 
+    private Game game;
     private int connectedUsers = 0;
     private ServerSocket serverSocket;
 
 
-    public Chat() {
+    public Chat1(Game game) {
 
-        clientDispatcherList = new Vector<>();
+        this.game = game;
 
         try {
             serverSocket = new ServerSocket(PORT);
@@ -37,7 +38,7 @@ public class Chat {
     public void startChat() {
 
         try {
-            while (connectedUsers < MAX_USERS) {
+            while (connectedUsers < MAX_USERS) { //PODEMOS METER WHILE TRUE COM A POOL
 
                 Socket clientSocket = serverSocket.accept();//Blocks while waiting for a client connection
                 System.out.println("connection established to IP: " + clientSocket.getInetAddress());
@@ -53,9 +54,9 @@ public class Chat {
 
     public void broadcast(String msg) {
 
-        synchronized (clientDispatcherList) {
+        synchronized (game.getPlayersMap()) {
 
-            for (ClientDispatcher iClientDispatcher : clientDispatcherList) {
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
 
                 iClientDispatcher.sendMessage(msg);
                 System.out.println(Messager.getServerSentMessage(iClientDispatcher.getNickName()));
@@ -66,17 +67,17 @@ public class Chat {
     private void initClientDispatcher(Socket clientSocket) {
 
         ClientDispatcher clientDispatcher = new ClientDispatcher(clientSocket, this);
-        clientDispatcherList.add(clientDispatcher);
+        game.getPlayersMap().put(clientDispatcher, new Hand());
 
-        ExecutorService pool = Executors.newFixedThreadPool(20);
+        ExecutorService pool = Executors.newFixedThreadPool(4);
         pool.submit(clientDispatcher);
     }
 
     public boolean clientExists(String userName) {
 
-        synchronized (clientDispatcherList) {
+        synchronized (game.getPlayersMap()) {
 
-            for (ClientDispatcher iClientDispatcher : clientDispatcherList) {
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
                 if (iClientDispatcher.getNickName().equals(userName)) {
                     return true;
                 }
@@ -94,9 +95,9 @@ public class Chat {
 
     public void sendOnlineList(ClientDispatcher clientDispatcher) {
 
-        synchronized (clientDispatcherList) {
+        synchronized (game.getPlayersMap()) {
 
-            for (ClientDispatcher iClientDispatcher : clientDispatcherList) {
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
                 clientDispatcher.sendMessage(iClientDispatcher.getNickName());
             }
         }
@@ -105,9 +106,9 @@ public class Chat {
 
     private ClientDispatcher getUserClientDispatcher(String nickName) {
 
-        synchronized (clientDispatcherList) {
+        synchronized (game.getPlayersMap()) {
 
-            for (ClientDispatcher iClientDispatcher : clientDispatcherList) {
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
                 if (iClientDispatcher.getNickName().equals(nickName)) {
                     return iClientDispatcher;
                 }
@@ -119,7 +120,7 @@ public class Chat {
 
     public void disconnect(ClientDispatcher clientDispatcher) {
 
-        clientDispatcherList.remove(clientDispatcher);
+        game.getPlayersMap().remove(clientDispatcher);
         connectedUsers--;
 
         clientDispatcher.sendMessage(Messager.getClientDisconnectedMessage());

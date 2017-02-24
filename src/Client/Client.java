@@ -17,7 +17,7 @@ public class Client {
      * write messages to output stream
      * read messages from input stream and print them to screen
      * be able to distinguish between messages from another players and messages from the Server.GameLogic.Game
-     * Know when to print a message to Server.Chat.Chat sys out or to Server.GameLogic.Game sys out
+     * Know when to print a message to Server.Chat1.Chat1 sys out or to Server.GameLogic.Game sys out
      */
 
     private Socket socket;

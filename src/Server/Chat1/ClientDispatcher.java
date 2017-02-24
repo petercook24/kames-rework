@@ -9,7 +9,7 @@ import java.net.Socket;
  */
 public class ClientDispatcher implements Runnable {
 
-    private Chat chat;
+    private Chat1 chat1;
     private Socket clientSocket;
     private BufferedReader in;
     private BufferedWriter out;
@@ -19,10 +19,10 @@ public class ClientDispatcher implements Runnable {
     private boolean connected;
 
 
-    public ClientDispatcher(Socket clientSocket, Chat chat) {
+    public ClientDispatcher(Socket clientSocket, Chat1 chat1) {
 
         try {
-            this.chat = chat;
+            this.chat1 = chat1;
             this.clientSocket = clientSocket;
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
@@ -43,7 +43,7 @@ public class ClientDispatcher implements Runnable {
                 sendMessage(Messager.getClientInsertNickNameMessage());
                 setNickName(in.readLine());
             }
-            chat.broadcast(Messager.getChatWelcomeMessage(nickName));
+            chat1.broadcast(Messager.getChatWelcomeMessage(nickName));
 
             setTeam();
             String msg = in.readLine();
@@ -59,7 +59,7 @@ public class ClientDispatcher implements Runnable {
                 }
 
                 //IF MESSAGE IS REGULAR
-                chat.broadcast(Messager.getChatUserSaidMessage(nickName, msg));
+                chat1.broadcast(Messager.getChatUserSaidMessage(nickName, msg));
                 msg = in.readLine(); //Blocks while waiting for client's message
             }
 
@@ -76,7 +76,7 @@ public class ClientDispatcher implements Runnable {
 
         if (msg == null) {
             System.out.println("DISCONECTING");
-            chat.disconnect(this);
+            chat1.disconnect(this);
             return;
         }
 
@@ -85,7 +85,7 @@ public class ClientDispatcher implements Runnable {
         switch (command) {
 
             case "QUIT":
-                chat.disconnect(this);
+                chat1.disconnect(this);
                 break;
 
             case "POKE":
@@ -100,15 +100,15 @@ public class ClientDispatcher implements Runnable {
                     sendMessage(Messager.getClientNoUserErrorMessage());
                     break;
                 }
-                if (!chat.clientExists(user)) {
+                if (!chat1.clientExists(user)) {
                     sendMessage(Messager.getClientInvalidUserErrorMessage(user));
                     break;
                 }
-                chat.sendPrivateMessageTo(user, finalMessage);
+                chat1.sendPrivateMessageTo(user, finalMessage);
                 break;
 
             case "LIST":
-                chat.sendOnlineList(this);
+                chat1.sendOnlineList(this);
                 break;
 
             case "HELP":

@@ -17,7 +17,7 @@ public class ClientHandler implements Runnable {
      * Same shit we did before
      */
 
-    private Chat chatServer;                        // Chat server
+    private Chat chatServer;                        // Chat1 server
     private Socket clientSocket;
     private BufferedWriter out = null;
     private BufferedReader in = null;

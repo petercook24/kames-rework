@@ -3,6 +3,12 @@ package Server.GameLogic;
 import Client.Client;
 import Server.Chat.Chat;
 import Server.Chat.ClientHandler;
+import Server.Chat1.Chat1;
+import Server.Chat1.ClientDispatcher;
+
+import java.util.HashMap;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by tiagoRodrigues on 18/02/2017.
@@ -11,7 +17,7 @@ import Server.Chat.ClientHandler;
 /**
  * Server Responsabilities:
  * <p>
- * Server.Chat.Chat:
+ * Server.Chat1.Chat1:
  * Start the chat
  * <p>
  * <p>
@@ -31,19 +37,18 @@ import Server.Chat.ClientHandler;
 public class Game {
 
 
-    private Chat chat;
-    private Deck deck; //SHARED MUTABLE STATE
-    private Client[] players;
+    private Chat1 chat;
+    private Deck deck;
+    private HashMap<ClientDispatcher, Hand> players;
     private Hand tableHand; //SHARED MUTABLE STATE
 
 
     public void init() {
-        chat = new Chat();
+        chat = new Chat1(this);
         deck = new Deck();
-        players = new Client[4];// INITS A 4 PLAYERS ARRAY
+        players = new HashMap<>(4);// Inits a map for 4 players
         tableHand = new Hand();
-        chat.start(); //STARTS THE CHAT
-        chat.setGame(this);
+        chat.startChat(); //STARTS THE CHAT
         setSignal();
     }
 
@@ -73,7 +78,7 @@ public class Game {
         ClientHandler enemy2 = null;
 
         for (ClientHandler iPlayer : chat.getClients()) {
-            if(iPlayer == player || iPlayer == player.getPartner()){
+            if(iPlayer == player || iPlayer == getPartner(player)){
                 continue;
             }
             if(enemy1 == null){
@@ -84,8 +89,8 @@ public class Game {
         }
 
         if (endCommand.equals("KAMES")) {
-            if (hasKames(player.getPartner())){
-                winRound(player, player.getPartner());
+            if (hasKames(getPartner(player))){
+                winRound(player, getPartner(player));
                 return;
             }
             winRound(enemy1, enemy2);
@@ -93,7 +98,7 @@ public class Game {
         }
         if(endCommand.equals("CORTA")){
             if(hasKames(enemy1) || hasKames(enemy2)){
-                winRound(player, player.getPartner());
+                winRound(player, getPartner(player));
                 return;
             }
             winRound(enemy1, enemy2);
@@ -137,4 +142,13 @@ public class Game {
         tableHand.getActiveCards().add(playerCard);
         return true;
     }
+
+    public HashMap<ClientDispatcher, Hand> getPlayersMap(){
+        return players;
+    }
+    public Set<ClientDispatcher> getPlayersSet(){
+        return players.keySet();
+    }
+
+
 }

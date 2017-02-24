@@ -16,7 +16,7 @@ import java.util.List;
 public class Chat {
 
     /**
-     * Server.Chat.Chat Responsabilities
+     * Server.Chat1.Chat1 Responsabilities
      *
      * Handle multiple clients (Client.Client Handlers)
      * Distinguish between a game command and a chat message
@@ -32,6 +32,8 @@ public class Chat {
     private boolean gameStarted;                                   // If game has started = true
     public static final int PLAYER_LIMIT = 4;                     // Limit number of players
     private int numOfConnections;                                  // Number of players
+
+
 
     /**
      * Starts the game:
