@@ -144,13 +144,16 @@ public class Chat1 {
         Card playerCard;
         Card tableCard;
 
-        if (playerHasCard(playerCardValue, playerHand) && tableHasCard(tableCardValue)) {
-            playerCard = getPlayerCard(playerCardValue, playerHand);
-            tableCard = getTableCard(tableCardValue);
+        if (!playerHasCard(playerCardValue, playerHand) || !tableHasCard(tableCardValue)) {
+            broadcast("PLAY NOT VALID");
+            return;
+        }
 
-            synchronized (game.getTableHand()) {
-                game.switchTableCardWith(tableCard, playerCard);
-            }
+        playerCard = getPlayerCard(playerCardValue, playerHand);
+        tableCard = getTableCard(tableCardValue);
+
+        synchronized (game.getTableHand()) {
+            game.switchTableCardWith(tableCard, playerCard);
         }
     }
 
@@ -163,9 +166,9 @@ public class Chat1 {
         return false;
     }
 
-    private Card getPlayerCard(String playerCardValue, Hand playerHand){
+    private Card getPlayerCard(String playerCardValue, Hand playerHand) {
         for (Card iCard : playerHand.getActiveCards()) {
-            if (iCard.getValue().equals(playerCardValue)){
+            if (iCard.getValue().equals(playerCardValue)) {
                 return iCard;
             }
         }
@@ -182,7 +185,7 @@ public class Chat1 {
         return false;
     }
 
-    private Card getTableCard(String tableCardValue){
+    private Card getTableCard(String tableCardValue) {
         for (Card iCard : game.getTableHand().getActiveCards()) {
             if (iCard.getValue().equals(tableCardValue)) {
                 return iCard;
