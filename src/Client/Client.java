@@ -77,7 +77,7 @@ public class Client {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    if (in.equals("QUIT"))
+                    if (in.equals("/QUIT"))
                         disconnect();
                 }
             }

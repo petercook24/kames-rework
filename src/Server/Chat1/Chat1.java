@@ -47,7 +47,7 @@ public class Chat1 {
                 connectedUsers++;
                 initClientDispatcher(clientSocket);
                 if (connectedUsers == 4) {
-                    setSignal(); //TODO: setSignal()
+                    //setSignal(); //TODO: setSignal()
                 }
             }
 
@@ -91,10 +91,10 @@ public class Chat1 {
         return false;
     }
 
-    public void sendPrivateMessageTo(String nickName, String treatedPrivateMessage) {
+    public void sendPrivateMessageTo(String nickName, String message) {
 
         ClientDispatcher userCD = getUserClientDispatcher(nickName);
-        userCD.sendMessage(Messager.getClientPrivateMessage(nickName, treatedPrivateMessage));
+        userCD.sendMessage(Messager.getClientPrivateMessage(nickName, message));
     }
 
 
