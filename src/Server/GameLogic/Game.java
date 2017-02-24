@@ -1,14 +1,10 @@
 package Server.GameLogic;
 
-import Client.Client;
-import Server.Chat.Chat;
-import Server.Chat.ClientHandler;
-import Server.Chat1.Chat1;
 import Server.Chat1.ClientDispatcher;
+import Server.Chat1.Chat1;
 
 import java.util.HashMap;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by tiagoRodrigues on 18/02/2017.
@@ -56,11 +52,11 @@ public class Game {
 
     }
 
-//    public void start() {
-//        //showForbiddenCard();
-//        giveInitialCardsToPlayers();
-//        startNewTurn();
-//    }
+   public void start() {
+       showForbiddenCard();
+       giveInitialCardsToPlayers();
+       startNewTurn();
+    }
 
     private void startNewTurn() {
 
@@ -72,32 +68,32 @@ public class Game {
         startNewTurn();
     }
 
-    public void endGame(ClientHandler player, String endCommand) {
+    public void endGame(ClientDispatcher player, String endCommand) {
 
-        ClientHandler enemy1 = null;
-        ClientHandler enemy2 = null;
+        ClientDispatcher enemy1 = null;
+        ClientDispatcher enemy2 = null;
 
-        for (ClientHandler iPlayer : chat.getClients()) {
-            if(iPlayer == player || iPlayer == getPartner(player)){
-                continue;
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+            if (iPlayer.getTeam() != player.getTeam()) {
+
+                if (enemy1 == null) {
+                    enemy1 = iPlayer;
+                    continue;
+                }
+                enemy2 = iPlayer;
             }
-            if(enemy1 == null){
-                enemy1 = iPlayer;
-                return;
-            }
-            enemy2 = iPlayer;
         }
 
         if (endCommand.equals("KAMES")) {
-            if (hasKames(getPartner(player))){
+            if (hasKames(getPartner(player))) {
                 winRound(player, getPartner(player));
                 return;
             }
             winRound(enemy1, enemy2);
             return;
         }
-        if(endCommand.equals("CORTA")){
-            if(hasKames(enemy1) || hasKames(enemy2)){
+        if (endCommand.equals("CORTA")) {
+            if (hasKames(enemy1) || hasKames(enemy2)) {
                 winRound(player, getPartner(player));
                 return;
             }
@@ -105,11 +101,14 @@ public class Game {
         }
     }
 
-    private void giveInitialCardsToPlayers() {
-        for (Client iPlayer : players) {
-            deck.give4CardsTo(iPlayer.getHand());
-        }
+    private String showForbiddenCard() {
+        return deck.showLastCard().getValue();
+    }
 
+    private void giveInitialCardsToPlayers() {
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+            deck.give4CardsTo(getPlayersMap().get(iPlayer));
+        }
     }
 
     private void drawTableCards() {
@@ -143,10 +142,11 @@ public class Game {
         return true;
     }
 
-    public HashMap<ClientDispatcher, Hand> getPlayersMap(){
+    public HashMap<ClientDispatcher, Hand> getPlayersMap() {
         return players;
     }
-    public Set<ClientDispatcher> getPlayersSet(){
+
+    public Set<ClientDispatcher> getPlayersSet() {
         return players.keySet();
     }
 

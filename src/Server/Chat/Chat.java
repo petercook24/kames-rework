@@ -1,14 +1,11 @@
 package Server.Chat;
 
-import Client.Client;
 import Server.GameLogic.Game;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by tiagoRodrigues on 18/02/2017.
@@ -28,7 +25,7 @@ public class Chat {
     private static final int PORT_NUMBER = 8080;                   // Port to listen for connections
 
     private Game game;                                             // Game object that will have all logic
-    private ArrayList<ClientHandler> clients;                           // List of Client threads
+    private ArrayList<ClientDispatcher> clients;                           // List of Client threads
     private boolean gameStarted;                                   // If game has started = true
     public static final int PLAYER_LIMIT = 4;                     // Limit number of players
     private int numOfConnections;                                  // Number of players
@@ -58,10 +55,10 @@ public class Chat {
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("Client connected: " + clientSocket.getInetAddress().getHostName());
 
-                    // Creates a new ClientHandler
+                    // Creates a new ClientDispatcher
                     numOfConnections++;
                     String name = "Player-" + numOfConnections;
-                    ClientHandler client = new ClientHandler(clientSocket, this);
+                    ClientDispatcher client = new ClientDispatcher(clientSocket, this);
                     clients.add(client);
 
                     // Serves the client connection with a new thread
@@ -96,7 +93,7 @@ public class Chat {
      */
     public void sendMessageToPartner(String partnerNickname, String nickname, String message){
 
-        for(ClientHandler client: clients) {
+        for(ClientDispatcher client: clients) {
 
             if(client.getNickname().equals(partnerNickname)) {
 
@@ -116,7 +113,7 @@ public class Chat {
 
             System.out.println(nickname + ":" + message);
 
-            for(ClientHandler iClient: clients) {
+            for(ClientDispatcher iClient: clients) {
 
                 if(!iClient.getNickname().equals(nickname)) {
                     iClient.sendMsgToSelf(nickname, message);
@@ -136,7 +133,7 @@ public class Chat {
 
             int nameCount = 0;
 
-            for(ClientHandler client: clients) {
+            for(ClientDispatcher client: clients) {
 
                 if(!client.getNickname().isEmpty()) {
                     nameCount++;

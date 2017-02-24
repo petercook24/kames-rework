@@ -9,7 +9,7 @@ import java.net.Socket;
 /**
  * Created by tiagoRodrigues on 18/02/2017.
  */
-public class ClientHandler implements Runnable {
+public class ClientDispatcher implements Runnable {
 
     /**
      * Client.Client Handler Responsabilities
@@ -24,7 +24,7 @@ public class ClientHandler implements Runnable {
     private String nickname;
     private String partnerNickname;
 
-    public ClientHandler (Socket socket , Chat chatServer) throws IOException {
+    public ClientDispatcher(Socket socket , Chat chatServer) throws IOException {
         this.clientSocket = socket;
         this.chatServer = chatServer;
 

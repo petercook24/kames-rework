@@ -38,13 +38,16 @@ public class Chat1 {
     public void startChat() {
 
         try {
-            while (connectedUsers < MAX_USERS) { //PODEMOS METER WHILE TRUE COM A POOL
+            while (true) {
 
                 Socket clientSocket = serverSocket.accept();//Blocks while waiting for a client connection
                 System.out.println("connection established to IP: " + clientSocket.getInetAddress());
 
-                initClientDispatcher(clientSocket);
                 connectedUsers++;
+                initClientDispatcher(clientSocket);
+                if(connectedUsers == 4){
+                    setSignal();
+                }
             }
 
         } catch (IOException e) {
@@ -68,8 +71,9 @@ public class Chat1 {
 
         ClientDispatcher clientDispatcher = new ClientDispatcher(clientSocket, this);
         game.getPlayersMap().put(clientDispatcher, new Hand());
+        clientDispatcher.setTeam(connectedUsers);
 
-        ExecutorService pool = Executors.newFixedThreadPool(4);
+        ExecutorService pool = Executors.newFixedThreadPool(MAX_USERS);
         pool.submit(clientDispatcher);
     }
 

@@ -45,7 +45,6 @@ public class ClientDispatcher implements Runnable {
             }
             chat1.broadcast(Messager.getChatWelcomeMessage(nickName));
 
-            setTeam();
             String msg = in.readLine();
 
             while (msg != null || !connected) {
@@ -151,6 +150,18 @@ public class ClientDispatcher implements Runnable {
 
     public String getNickName() {
         return nickName;
+    }
+
+    public void setTeam(int connectionNb){
+        if (connectionNb%2 != 0){
+            team = "TEAM 1";
+            return;
+        }
+        team = "TEAM 2";
+    }
+
+    public String getTeam(){
+        return team;
     }
 }
 
