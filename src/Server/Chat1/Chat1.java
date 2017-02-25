@@ -47,6 +47,7 @@ public class Chat1 {
                 initClientDispatcher(clientSocket);
             }
 
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,7 +75,7 @@ public class Chat1 {
         pool.submit(clientDispatcher);
 
         if (connectedUsers == MAX_USERS) {
-
+            System.out.println("Max users limit achieved.");
             try {
                 Thread.sleep(10000);
             }

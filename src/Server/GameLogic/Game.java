@@ -55,11 +55,12 @@ public class Game {
 
         System.out.println("----- PREPARE YOURSELVES, GAME IS STARTING -----");
 
+
         deck = new Deck();
         tableHand = new Hand();
         showForbiddenCard();
         giveInitialCardsToPlayers();
-        startNewTurn();
+        // startNewTurn();
     }
 
 
@@ -75,6 +76,7 @@ public class Game {
         resetLastCommandTime();
         keepProcessingTrades();
     }
+
 
     public void endRound(ClientDispatcher player, String endGameCommand) {
 
@@ -122,6 +124,8 @@ public class Game {
             deck.give4CardsTo(playerHand);
 
             iPlayer.sendMessage(Messager.getClientCardsReceivedMessage(playerHand.toString()));
+
+
         }
     }
 
@@ -243,7 +247,7 @@ public class Game {
 
         for (ClientDispatcher iPlayer : getPlayersSet()) {
 
-            if(iPlayer.getRoundsWon() == ROUNDS_TO_WIN){
+            if (iPlayer.getRoundsWon() == ROUNDS_TO_WIN) {
                 chat.broadcast(Messager.getChatWinningTeamMessage(iPlayer.getTeam()));
                 startNewGame();
             }
