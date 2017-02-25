@@ -164,6 +164,10 @@ public class ClientDispatcher implements Runnable {
         return team;
     }
 
+    public int getRoundsWon() {
+        return roundsWon;
+    }
+
     public void win() {
         roundsWon++;
     }

@@ -162,7 +162,7 @@ public class Chat1 {
     }
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
-        game.endGame(player, endGameCommand);
+        game.endRound(player, endGameCommand);
     }
 
 

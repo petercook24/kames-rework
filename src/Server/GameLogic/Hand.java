@@ -5,7 +5,7 @@ package Server.GameLogic;
  */
 
 
-import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Class Hand represents each player's four playable cards
@@ -13,13 +13,13 @@ import java.util.ArrayList;
  */
 public class Hand {
 
-    private ArrayList<Card> activeCards;
+    private Vector<Card> activeCards;
 
     public Hand(){
-        activeCards = new ArrayList<>();
+        activeCards = new Vector<>();
     }
 
-    public ArrayList<Card> getActiveCards() {
+    public Vector<Card> getActiveCards() {
         return activeCards;
     }
 
@@ -29,9 +29,8 @@ public class Hand {
         if(activeCards.size() == 0){
             return;
         }
-        for (Card iCard : activeCards) {
-            activeCards.remove(iCard);
-        }
+        activeCards = new Vector<>();
+
     }
 
 
