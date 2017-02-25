@@ -16,12 +16,11 @@ import java.util.concurrent.Executors;
 public class Chat1 {
 
     public static final int PORT = 8080;
-    public static final int MAX_USERS = 4;
+    public static final int MAX_USERS = 3;
 
     private Game game;
     private int connectedUsers = 0;
     private ServerSocket serverSocket;
-
 
     public Chat1(Game game) {
 
@@ -46,9 +45,6 @@ public class Chat1 {
 
                 connectedUsers++;
                 initClientDispatcher(clientSocket);
-                if (connectedUsers == 4) {
-                    //setSignal(); //TODO: setSignal()
-                }
             }
 
         } catch (IOException e) {
@@ -91,10 +87,30 @@ public class Chat1 {
         return false;
     }
 
+    /*TODO não percebo em que circunstância poderemos querer mandar uma PM para alguém. Acho que o que queres
+    neste método é enviar a mensagem para o teu parceiro de equipa certo? Até porque o tem Dispatcher só tem
+    como propriedade a String team. Acho que só te deves ter te esquecido de alterar isto mas confirma sff ;)
+    De qualquer forma eu km preciso de um método para enviar mensagem para a equipa vou adiciona-lo por baixo.
+    */
+
+
     public void sendPrivateMessageTo(String nickName, String message) {
 
         ClientDispatcher userCD = getUserClientDispatcher(nickName);
         userCD.sendMessage(Messager.getClientPrivateMessage(nickName, message));
+    }
+
+    public void sendTeamMessage(String team , String message){
+
+        synchronized (game.getPlayersMap()) {
+
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
+
+                if (iClientDispatcher.getTeam() == team) {
+                    iClientDispatcher.sendMessage(message);
+                }
+            }
+        }
     }
 
 
@@ -135,6 +151,11 @@ public class Chat1 {
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
         game.endGame(player, endGameCommand);
+    }
+
+
+    public synchronized int getConnectedUsers() {
+        return connectedUsers;
     }
 
     public void switchTableCardWith(String tableCardValue, String playerCardValue, ClientDispatcher player) {
@@ -193,5 +214,6 @@ public class Chat1 {
         }
         System.err.println("SOMETHING REALLY WRONG GETTING EXISTING TABLE CARD");
         return null;
+
     }
 }
