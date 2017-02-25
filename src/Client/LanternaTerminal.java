@@ -54,15 +54,18 @@ import com.googlecode.lanterna.terminal.Terminal;
         
         
         public void drawTable(String[] cards){
+            screen.clear();
             screen.putString(15,4,cards[0], Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(18,4,cards[1], Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(21,4,cards[2], Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(24,4,cards[3], Terminal.Color.WHITE, Terminal.Color.BLACK);
+
             screen.refresh();
             
         }
         
         public void drawPlayerHand(String[] cards){
+            screen.clear();
             screen.putString(15,15,cards[0],Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(18,15,cards[1],Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(21,15,cards[2],Terminal.Color.WHITE, Terminal.Color.BLACK);
