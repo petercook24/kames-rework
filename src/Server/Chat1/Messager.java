@@ -68,7 +68,7 @@ public class Messager {
         return "---- TABLE CARDS CLEARED -----";
     }
 
-    public static String getChatCardsOnTagbleMessage(String cardsValues) {
+    public static String getChatCardsOnTableMessage(String cardsValues) {
         return "TABLE CARDS:" + cardsValues;
     }
 
@@ -79,5 +79,9 @@ public class Messager {
 
     public static String getChatGameStartMessage() {
         return "----- PREPARE YOURSELVES, GAME IS STARTING -----";
+    }
+
+    public static String getChatNoMoreCardsOnDeckMEssage(int deckSize) {
+        return "THERE ARE " + deckSize + " CARDS LEFT ON THE DECK!";
     }
 }

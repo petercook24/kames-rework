@@ -129,11 +129,18 @@ public class Game {
     }
 
     private void drawTableCards() {
+
+        if (deck.getDeckSize() <= 3) {
+            chat.broadcast(Messager.getChatNoMoreCardsOnDeckMEssage(deck.getDeckSize()));
+            return;
+        }
+
         synchronized (tableHand) {
             deck.give4CardsTo(tableHand);
         }
         chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
     }
+
 
     private void burnTableHand() {
         synchronized (tableHand) {

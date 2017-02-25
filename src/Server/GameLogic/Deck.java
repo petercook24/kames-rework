@@ -37,7 +37,14 @@ public class Deck {
         return cards.poll();
     }
 
+
+    public int getDeckSize() {
+        return cards.size();
+    }
+
+
     public void give4CardsTo(Hand hand) {
+
         for (int givenCards = 0; givenCards < 4; givenCards++) {
             hand.receiveCard(pollCard());
         }
