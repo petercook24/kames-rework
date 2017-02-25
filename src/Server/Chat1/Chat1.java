@@ -74,6 +74,14 @@ public class Chat1 {
         pool.submit(clientDispatcher);
 
         if (connectedUsers == MAX_USERS) {
+
+            try {
+                Thread.sleep(10000);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             game.startNewGame();
         }
     }

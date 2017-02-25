@@ -4,7 +4,6 @@ import Server.Chat1.ClientDispatcher;
 import Server.Chat1.Chat1;
 import Server.Chat1.Messager;
 
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Set;
 
@@ -58,18 +57,35 @@ public class Game {
         roundsPlayed = 0;
         showForbiddenCard();
         giveInitialCardsToPlayers();
-        //startNewTurn();
+        startNewTurn();
     }
 
 
     private void startNewTurn() {
 
+        int turnCycles = 0;
+
         burnTableHand();
         drawTableCards();
+
         while (!isTurnOver()) {
-            keepProcessingTrades();//este metodo pode ter um nome melhor! SERÁ AQUI UM DO PRROBS DO MULTITHREADING?
+
+            keepProcessingTrades();
+
+            if (turnCycles < 2) {
+                if (askPlayersCanEndTurn()) {
+                    startNewTurn();
+                }
+                turnCycles++;
+                continue;
+            }
+            startNewTurn();
         }
-        startNewTurn();
+    }
+
+    private boolean askPlayersCanEndTurn() {
+
+
     }
 
 
@@ -123,10 +139,12 @@ public class Game {
 
     private void drawTableCards() {
         deck.give4CardsTo(tableHand);
+        chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
     }
 
     private void burnTableHand() {
         tableHand.clear();
+        chat.broadcast(Messager.getChatTableCardsClearedMessage());
     }
 
     private boolean isTurnOver() {

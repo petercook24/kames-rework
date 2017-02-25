@@ -21,7 +21,6 @@ public class Client {
      */
 
     private Socket socket;
-    private Hand hand;
     private String SERVER_IP = "localhost";
     private final int SERVER_PORT = 8080;
     private BufferedReader in;
@@ -30,9 +29,6 @@ public class Client {
     private boolean connected;
     private LanternaTerminal lanternaTerminal;
 
-    public Hand getHand() {
-        return hand;
-    }
 
     public void connect() {
 
