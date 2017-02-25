@@ -26,6 +26,9 @@ public class Hand {
 
     public void clear() {
 
+        if(activeCards.size() == 0){
+            return;
+        }
         for (Card iCard : activeCards) {
             activeCards.remove(iCard);
         }

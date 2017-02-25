@@ -63,4 +63,12 @@ public class Messager {
     public static String getClientCardsReceivedMessage(String cardsValues) {
         return "CARDS RECEIVED -->" + cardsValues;
     }
+
+    public static String getChatTableCardsClearedMessage() {
+        return "---- TABLE CARDS CLEARED -----";
+    }
+
+    public static String getChatCardsOnTableMessage(String cardsValues) {
+        return "TABLE CARDS: " + cardsValues;
+    }
 }
