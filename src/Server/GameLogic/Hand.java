@@ -34,5 +34,17 @@ public class Hand {
 
     public void receiveCard(Card card) {
         activeCards.add(card);
+        System.out.println("CARD RECEIVED --> " + card.getValue());
+    }
+
+    @Override
+    public String toString(){
+
+        String cardsValues = "";
+
+        for (Card iCard : activeCards) {
+            cardsValues += iCard.getValue();
+        }
+        return cardsValues;
     }
 }

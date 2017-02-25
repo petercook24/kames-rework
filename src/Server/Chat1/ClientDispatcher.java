@@ -56,7 +56,7 @@ public class ClientDispatcher implements Runnable {
 
             //when they are all connected, then set signal
 
-            setSignal();
+            //setSignal();
 
 
             String msg = in.readLine();
@@ -171,7 +171,7 @@ public class ClientDispatcher implements Runnable {
     public void setSignal(){
 
         long curTime= System.currentTimeMillis();
-        long duration = 100000;
+        long duration = 10000;
         long endTime = curTime + duration;
 
         sendMessage("you are now talking to your parter to make signal for " + (duration/1000) + " seconds");

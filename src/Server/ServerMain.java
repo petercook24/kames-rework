@@ -11,6 +11,6 @@ public class ServerMain {
 
         Game game = new Game();
         game.init();
-//        game.startNewGame();
+        game.startNewGame();
     }
 }

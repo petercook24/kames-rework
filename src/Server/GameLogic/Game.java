@@ -53,10 +53,12 @@ public class Game {
 
     public void startNewGame() {
 
+        System.out.println("GAME IS STRATING-----------------");
+
         roundsPlayed = 0;
         showForbiddenCard();
         giveInitialCardsToPlayers();
-        startNewTurn();
+        //startNewTurn();
     }
 
 
@@ -111,7 +113,11 @@ public class Game {
 
     private void giveInitialCardsToPlayers() {
         for (ClientDispatcher iPlayer : getPlayersSet()) {
-            deck.give4CardsTo(getPlayersMap().get(iPlayer));
+
+            Hand playerHand = getPlayersMap().get(iPlayer);
+            deck.give4CardsTo(playerHand);
+
+            iPlayer.sendMessage("CARDS RECEIVED --> " + playerHand.toString());
         }
     }
 

@@ -72,6 +72,10 @@ public class Chat1 {
 
         ExecutorService pool = Executors.newFixedThreadPool(MAX_USERS);
         pool.submit(clientDispatcher);
+
+        if (connectedUsers == MAX_USERS) {
+            game.startNewGame();
+        }
     }
 
     public boolean clientExists(String userName) {
@@ -100,7 +104,7 @@ public class Chat1 {
         userCD.sendMessage(Messager.getClientPrivateMessage(nickName, message));
     }
 
-    public void sendTeamMessage(String team , String message){
+    public void sendTeamMessage(String team, String message) {
 
         synchronized (game.getPlayersMap()) {
 
