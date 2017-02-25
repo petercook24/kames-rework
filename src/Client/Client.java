@@ -1,6 +1,7 @@
 package Client;
 
 import Server.GameLogic.Hand;
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,6 +21,7 @@ public class Client {
      * Know when to print a message to Server.Chat1.Chat1 sys out or to Server.GameLogic.Game sys out
      */
 
+
     private Socket socket;
     private String SERVER_IP = "localhost";
     private final int SERVER_PORT = 8080;
@@ -27,18 +29,15 @@ public class Client {
     private PrintWriter out;
     private BufferedReader userInput;
     private boolean connected;
-    private LanternaTerminal lanternaTerminal;
+    public LanternaTerminal lanternaTerminal;
 
 
     public void connect() {
 
         try {
             socket = new Socket(SERVER_IP, SERVER_PORT);
-            
             lanternaTerminal = new LanternaTerminal();
-            
             lanternaTerminal.createLanternaWindow();
-            
 
             // input and output streams initializing and System.in console input
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -92,8 +91,12 @@ public class Client {
             }
 
             System.out.println(inputMsg);
+
             if(inputMsg.startsWith("CARDS RECEIVED")){
-                lanternaTerminal.drawPlayerHand();
+
+                //Put each of the four cards values in an array and send it to print on Lanterna GUI
+                String[] cards = new String[]{inputMsg.split(" ")[3], inputMsg.split(" ")[4], inputMsg.split(" ")[5], inputMsg.split(" ")[6]};
+                lanternaTerminal.drawPlayerHand(cards);
             }
 
             if (inputMsg == null) {

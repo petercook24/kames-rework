@@ -17,7 +17,8 @@ import com.googlecode.lanterna.terminal.Terminal;
         private static Screen screen;
         
         public void createLanternaWindow(){
-            
+
+
             /**
              * Start the screen an set its initial properties
              */
@@ -40,7 +41,6 @@ import com.googlecode.lanterna.terminal.Terminal;
                 screen.putString(i,9,"*", Terminal.Color.GREEN, Terminal.Color.BLACK,ScreenCharacterStyle.Bold);
             }
             
-            
             /**
              * Draw second header
              */
@@ -58,16 +58,16 @@ import com.googlecode.lanterna.terminal.Terminal;
             screen.putString(17,3,"Q", Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(15,5,"K", Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.putString(17,5,"9", Terminal.Color.WHITE, Terminal.Color.BLACK);
-            
             screen.refresh();
             
         }
         
-        public void drawPlayerHand(){
-            screen.putString(15,15,"A",Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(17,15,"A",Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(19,15,"A",Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(21,15,"A",Terminal.Color.WHITE, Terminal.Color.BLACK);
+        public void drawPlayerHand(String[] cards){
+            screen.putString(15,15,cards[0],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(19,15,cards[1],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(22,15,cards[2],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(25,15,cards[3],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.refresh();
         }
         
         

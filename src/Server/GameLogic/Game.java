@@ -52,16 +52,16 @@ public class Game {
 
     public void startNewGame() {
 
-        System.out.println("GAME IS STRATING-----------------");
+        System.out.println("GAME IS STARTING-----------------");
 
         roundsPlayed = 0;
         showForbiddenCard();
         giveInitialCardsToPlayers();
-        startNewTurn();
+        // startNewTurn();
     }
 
 
-    private void startNewTurn() {
+/*    private void startNewTurn() {
 
         int turnCycles = 0;
 
@@ -81,12 +81,11 @@ public class Game {
             }
             startNewTurn();
         }
-    }
+    }*/
 
-    private boolean askPlayersCanEndTurn() {
+  /*  private boolean askPlayersCanEndTurn() {
 
-
-    }
+    }*/
 
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
@@ -134,6 +133,8 @@ public class Game {
             deck.give4CardsTo(playerHand);
 
             iPlayer.sendMessage(Messager.getClientCardsReceivedMessage(playerHand.toString()));
+
+
         }
     }
 
