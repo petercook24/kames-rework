@@ -55,16 +55,17 @@ public class Game {
 
         System.out.println("----- PREPARE YOURSELVES, GAME IS STARTING -----");
 
-
         deck = new Deck();
         tableHand = new Hand();
         showForbiddenCard();
         giveInitialCardsToPlayers();
-        // startNewTurn();
+        startNewTurn();
     }
 
 
     private void startNewTurn() {
+
+        chat.broadcast(Messager.getChatStartingNewTurnMessage());
 
         if (isWinnerFound()) {
             endGame();
@@ -72,9 +73,9 @@ public class Game {
 
         burnTableHand();
         drawTableCards();
-
         resetLastCommandTime();
         keepProcessingTrades();
+        startNewTurn();
     }
 
 
@@ -150,12 +151,10 @@ public class Game {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (System.currentTimeMillis() - lastCommandTime >= WAIT_TIME_BETWEEN_TURNS) {
-            System.out.println("STARTTING A NEW TURN!");
-            startNewTurn();
+        if (System.currentTimeMillis() - lastCommandTime < WAIT_TIME_BETWEEN_TURNS) {
+            keepProcessingTrades();
             return;
         }
-        keepProcessingTrades();
     }
 
     /**

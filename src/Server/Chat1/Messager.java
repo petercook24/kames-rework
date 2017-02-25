@@ -76,4 +76,8 @@ public class Messager {
         return "WINNING TEAM IS *** " + team + " *** \n" +
                 "KNEEL BEFORE THE NEW KAMES KINGS!";
     }
+
+    public static String getChatStartingNewTurnMessage() {
+        return "---- STARTING A NEW TURN ----";
+    }
 }
