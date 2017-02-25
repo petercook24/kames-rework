@@ -81,7 +81,7 @@ public class Chat1 {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-                game.startNewGame();
+            game.startNewGame();
         }
     }
 

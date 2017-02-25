@@ -80,4 +80,8 @@ public class Messager {
     public static String getChatGameStartMessage() {
         return "----- PREPARE YOURSELVES, GAME IS STARTING -----";
     }
+
+    public static String getChatNoMoreCardsOnDeckMEssage(int deckSize) {
+        return "THERE ARE " + deckSize + " CARDS LEFT ON THE DECK!";
+    }
 }

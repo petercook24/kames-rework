@@ -10,7 +10,6 @@ import java.net.Socket;
 public class ClientDispatcher implements Runnable {
 
     private Chat1 chat1;
-    private Socket clientSocket;
     private BufferedReader in;
     private BufferedWriter out;
     private InetAddress ip; //TODO: DO I REALLY NEED IT?
@@ -23,7 +22,6 @@ public class ClientDispatcher implements Runnable {
 
         try {
             this.chat1 = chat1;
-            this.clientSocket = clientSocket;
             roundsWon = 0;
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
@@ -50,7 +48,7 @@ public class ClientDispatcher implements Runnable {
 
             //clientDispatcher need to hold here to be sure 4 players are connected
 
-            while (chat1.getConnectedUsers() != chat1.MAX_USERS){
+            while (chat1.getConnectedUsers() != chat1.MAX_USERS) {
                 continue;
             }
 
@@ -172,37 +170,31 @@ public class ClientDispatcher implements Runnable {
         roundsWon++;
     }
 
-    public void setSignal(){
+    public void setSignal() {
 
-            long curTime = System.currentTimeMillis();
-            long duration = 10000;
-            long endTime = curTime + duration;
+        long curTime = System.currentTimeMillis();
+        long duration = 10000;
+        long endTime = curTime + duration;
 
-            sendMessage("you are now talking to your partner to make signal for " + (duration / 1000) + " seconds");
+        sendMessage("you are now talking to your partner to make signal for " + (duration / 1000) + " seconds");
 
-            while (System.currentTimeMillis() <= endTime) {
+        while (System.currentTimeMillis() <= endTime) {
 
-                try {
+            try {
 
-                    if (in.ready()) {
-                        System.out.println("here");
-                        String msg = in.readLine(); //I need this method to be non blocking
-                        chat1.sendTeamMessage(team, msg);
-                        System.out.println("team message sent!");
+                if (in.ready()) {
+                    System.out.println("here");
+                    String msg = in.readLine(); //I need this method to be non blocking
+                    chat1.sendTeamMessage(team, msg);
+                    System.out.println("team message sent!");
 
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
 
-
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
         System.out.println("done waiting");
-
-
     }
 }
 
