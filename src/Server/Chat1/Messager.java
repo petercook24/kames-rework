@@ -84,4 +84,8 @@ public class Messager {
     public static String getChatNoMoreCardsOnDeckMEssage(int deckSize) {
         return "THERE ARE " + deckSize + " CARDS LEFT ON THE DECK!";
     }
+
+    public static String getChatWinnerMessage(String team, int roundsWon) {
+        return "TEAM "+ team + " WINS!!! " + team + "victories: " + roundsWon;
+    }
 }

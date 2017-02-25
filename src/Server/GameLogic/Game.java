@@ -53,6 +53,13 @@ public class Game {
 
     public void startNewGame() {
 
+        try {
+            Thread.sleep(3000);
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         chat.broadcast(Messager.getChatGameStartMessage());
 
         deck = new Deck();
@@ -222,6 +229,8 @@ public class Game {
     }
 
     private void winRound(ClientDispatcher player, ClientDispatcher partner) {
+
+        chat.broadcast(Messager.getChatWinnerMessage(player.getTeam(), player.getRoundsWon()));
         player.win();
         partner.win();
         startNewGame();
