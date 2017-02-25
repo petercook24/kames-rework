@@ -53,11 +53,11 @@ import com.googlecode.lanterna.terminal.Terminal;
         }
         
         
-        public void drawTable(){
-            screen.putString(15,3,"A", Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(17,3,"Q", Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(15,5,"K", Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(17,5,"9", Terminal.Color.WHITE, Terminal.Color.BLACK);
+        public void drawTable(String[] cards){
+            screen.putString(15,3,cards[0], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(17,3,cards[1], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(15,5,cards[2], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(17,5,cards[3], Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.refresh();
             
         }

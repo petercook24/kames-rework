@@ -95,8 +95,15 @@ public class Client {
             if(inputMsg.startsWith("CARDS RECEIVED")){
 
                 //Put each of the four cards values in an array and send it to print on Lanterna GUI
-                String[] cards = new String[]{inputMsg.split(" ")[3], inputMsg.split(" ")[4], inputMsg.split(" ")[5], inputMsg.split(" ")[6]};
-                lanternaTerminal.drawPlayerHand(cards);
+                String[] playerCards = new String[]{inputMsg.split(" ")[3], inputMsg.split(" ")[4], inputMsg.split(" ")[5], inputMsg.split(" ")[6]};
+                lanternaTerminal.drawPlayerHand(playerCards);
+            }
+
+            if(inputMsg.startsWith("TABLE CARDS")){
+
+                //Put each of the four cards values in an array and send it to print on Lanterna GUI
+                String[] tableCards = new String[]{inputMsg.split(" ")[2], inputMsg.split(" ")[3], inputMsg.split(" ")[4], inputMsg.split(" ")[5]};
+                lanternaTerminal.drawTable(tableCards);
             }
 
             if (inputMsg == null) {
