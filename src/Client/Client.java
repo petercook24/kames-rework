@@ -96,6 +96,9 @@ public class Client {
             }
 
             System.out.println(inputMsg);
+            if(inputMsg.startsWith("CARDS RECEIVED")){
+                lanternaTerminal.drawPlayerHand();
+            }
 
             if (inputMsg == null) {
                 System.out.println("Connection lost");
