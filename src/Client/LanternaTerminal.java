@@ -54,12 +54,12 @@ public class LanternaTerminal {
 
     public void clearLineTable() {
 
-        for (int i = 15; i < 27) {
+        for (int i = 15; i < 27; i++) {
             screen.putString(i, 4, " ", Terminal.Color.WHITE, Terminal.Color.BLACK);
         }
     }
     private void clearLinePlayer() {
-        for (int i = 15; i < 27) {
+        for (int i = 15; i < 27; i++) {
             screen.putString(i, 15, " ", Terminal.Color.WHITE, Terminal.Color.BLACK);
         }
     }
