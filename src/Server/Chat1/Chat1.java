@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class Chat1 {
 
     public static final int PORT = 8080;
-    public static final int MAX_USERS = 4;
+    public static final int MAX_USERS = 3;
 
     private Game game;
     private int connectedUsers = 0;
@@ -154,7 +154,7 @@ public class Chat1 {
     }
 
 
-    public int getConnectedUsers() {
+    public synchronized int getConnectedUsers() {
         return connectedUsers;
     }
 

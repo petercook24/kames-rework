@@ -39,21 +39,23 @@ public class ClientDispatcher implements Runnable {
     public void run() {
 
         try {
-            System.out.println("here");
             while (!isNickNameValid()) {
                 sendMessage(Messager.getClientInsertNickNameMessage());
                 setNickName(in.readLine());
             }
+            System.out.println("My nickname is " + nickName);
+            System.out.println("My team is " + team);
 
             chat1.broadcast(Messager.getChatWelcomeMessage(nickName));
 
             //clientDispatcher need to hold here to be sure 4 players are connected
 
-            while (chat1.getConnectedUsers() != 4){
+            while (chat1.getConnectedUsers() != chat1.MAX_USERS){
                 continue;
             }
 
             //when they are all connected, then set signal
+
             setSignal();
 
 
@@ -166,21 +168,22 @@ public class ClientDispatcher implements Runnable {
 
     public void setSignal(){
 
+        sendMessage("you are now talking to your parter to make signal for X seconds");
+
         long curTime= System.currentTimeMillis();
         long duration = 100000;
         long endTime = curTime + duration;
 
-        sendMessage("you are now talking to your parter to make signal for X seconds");
-
         while (System.currentTimeMillis() <= endTime){
 
-            try {;
+            try {
 
                 if (in.ready()) {
                     System.out.println("here");
                     String msg = in.readLine(); //I need this method to be non blocking
                     chat1.sendTeamMessage(this.team,msg);
                     System.out.println("team message sent!");
+
                 }
 
             } catch (IOException e) {
