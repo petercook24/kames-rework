@@ -56,7 +56,7 @@ public class ClientDispatcher implements Runnable {
 
             //when they are all connected, then set signal
 
-            //setSignal();
+            setSignal();
 
 
             String msg = in.readLine();
@@ -174,29 +174,30 @@ public class ClientDispatcher implements Runnable {
 
     public void setSignal(){
 
-        long curTime= System.currentTimeMillis();
-        long duration = 10000;
-        long endTime = curTime + duration;
+            long curTime = System.currentTimeMillis();
+            long duration = 10000;
+            long endTime = curTime + duration;
 
-        sendMessage("you are now talking to your parter to make signal for " + (duration/1000) + " seconds");
+            sendMessage("you are now talking to your partner to make signal for " + (duration / 1000) + " seconds");
 
-        while (System.currentTimeMillis() <= endTime){
+            while (System.currentTimeMillis() <= endTime) {
 
-            try {
+                try {
 
-                if (in.ready()) {
-                    System.out.println("here");
-                    String msg = in.readLine(); //I need this method to be non blocking
-                    chat1.sendTeamMessage(this.team,msg);
-                    System.out.println("team message sent!");
+                    if (in.ready()) {
+                        System.out.println("here");
+                        String msg = in.readLine(); //I need this method to be non blocking
+                        chat1.sendTeamMessage(team, msg);
+                        System.out.println("team message sent!");
 
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+
             }
-
-
         }
 
         System.out.println("done waiting");

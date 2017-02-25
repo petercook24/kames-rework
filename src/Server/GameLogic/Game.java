@@ -53,7 +53,7 @@ public class Game {
 
     public void startNewGame() {
 
-        System.out.println("----- PREPARE YOURSELVES, GAME IS STARTING -----");
+        chat.broadcast(Messager.getChatGameStartMessage());
 
         deck = new Deck();
         tableHand = new Hand();
@@ -64,8 +64,6 @@ public class Game {
 
 
     private void startNewTurn() {
-
-        chat.broadcast(Messager.getChatStartingNewTurnMessage());
 
         if (isWinnerFound()) {
             endGame();
