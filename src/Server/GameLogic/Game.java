@@ -36,15 +36,13 @@ public class Game {
 
 
     public static final int ROUNDS_TO_WIN = 4;
+    public static final long WAIT_TIME_BETWEEN_TURNS = 10000;
+
     private Chat1 chat;
     private Deck deck;
     private Hashtable<ClientDispatcher, Hand> players;
     private Hand tableHand; //SHARED MUTABLE STATE
-    private int roundsPlayed;
     private long lastCommandTime;
-    private long waitTime = 10000;
-    private long endtime = lastCommandTime + waitTime;
-    //private long timeSinceLastCommand = System.currentTimeMillis() - lastCommandTime;
 
     public void init() {
         chat = new Chat1(this);
@@ -57,7 +55,6 @@ public class Game {
 
         System.out.println("----- PREPARE YOURSELVES, GAME IS STARTING -----");
 
-        roundsPlayed = 0;
         deck = new Deck();
         tableHand = new Hand();
         showForbiddenCard();
@@ -142,10 +139,6 @@ public class Game {
         chat.broadcast(Messager.getChatTableCardsClearedMessage());
     }
 
-    private boolean isTurnOver() {
-        throw new UnsupportedOperationException();
-    }
-
     private void keepProcessingTrades() {
 
         try {
@@ -153,7 +146,7 @@ public class Game {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        if (System.currentTimeMillis() - lastCommandTime >= 10000) {
+        if (System.currentTimeMillis() - lastCommandTime >= WAIT_TIME_BETWEEN_TURNS) {
             System.out.println("STARTTING A NEW TURN!");
             startNewTurn();
             return;
@@ -176,13 +169,7 @@ public class Game {
         tableHand.getActiveCards().add(playerCard);
         chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
 
-
-        long curTime = System.currentTimeMillis();
-        System.out.println("CURTIME IS: " + curTime);
-        // System.out.println("time since last command is: " + timeSinceLastCommand);
-
         resetLastCommandTime();
-        //System.out.println("AND NOW time since last command is**: " + timeSinceLastCommand);
         System.out.println("A card was changed");
         return true;
 
@@ -229,7 +216,6 @@ public class Game {
     private void winRound(ClientDispatcher player, ClientDispatcher partner) {
         player.win();
         partner.win();
-        roundsPlayed++;
         startNewGame();
     }
 
@@ -237,10 +223,6 @@ public class Game {
         return tableHand;
     }
 
-
-    public long getLastCommandTime() {
-        return lastCommandTime;
-    }
 
     public void resetLastCommandTime() {
         lastCommandTime = System.currentTimeMillis();
