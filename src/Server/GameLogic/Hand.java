@@ -15,6 +15,10 @@ public class Hand {
 
     private ArrayList<Card> activeCards;
 
+    public Hand(){
+        activeCards = new ArrayList<>();
+    }
+
     public ArrayList<Card> getActiveCards() {
         return activeCards;
     }

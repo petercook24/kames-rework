@@ -46,20 +46,17 @@ public class Game {
         players = new HashMap<>(4);// Inits a map for 4 players
         tableHand = new Hand();
         chat.startChat(); //STARTS THE CHAT
-        setSignal();
     }
 
-    private void setSignal() {
 
+    public void startNewGame() {
+
+        roundsPlayed = 0;
+        showForbiddenCard();
+        giveInitialCardsToPlayers();
+        startNewTurn();
     }
 
-   public void startNewGame() {
-
-       roundsPlayed = 0;
-       showForbiddenCard();
-       giveInitialCardsToPlayers();
-       startNewTurn();
-    }
 
     private void startNewTurn() {
 
@@ -70,6 +67,7 @@ public class Game {
         }
         startNewTurn();
     }
+
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
 
@@ -138,12 +136,14 @@ public class Game {
      * @returns true if card switch is made, false if not
      */
     public boolean switchTableCardWith(Card tableCard, Card playerCard) {
+
         if (!tableHand.getActiveCards().remove(tableCard)) {
             return false;
         }
         tableHand.getActiveCards().add(playerCard);
         return true;
     }
+
 
     public HashMap<ClientDispatcher, Hand> getPlayersMap() {
         return players;
@@ -153,28 +153,28 @@ public class Game {
         return players.keySet();
     }
 
-    private boolean hasKames(ClientDispatcher player){
+    private boolean hasKames(ClientDispatcher player) {
 
         String referenceValue = "";
 
-        for (Card iCard : players.get(player).getActiveCards()){
-            if(referenceValue.isEmpty()){
+        for (Card iCard : players.get(player).getActiveCards()) {
+            if (referenceValue.isEmpty()) {
                 referenceValue = iCard.getValue();
                 continue;
             }
-            if(!iCard.getValue().equals(referenceValue)){
+            if (!iCard.getValue().equals(referenceValue)) {
                 return false;
             }
         }
         return true;
     }
 
-    private ClientDispatcher getPartner(ClientDispatcher player){
+    private ClientDispatcher getPartner(ClientDispatcher player) {
 
         String playerTeam = player.getTeam();
 
         for (ClientDispatcher iPlayer : getPlayersSet()) {
-            if (iPlayer != player && iPlayer.getTeam().equals(playerTeam)){
+            if (iPlayer != player && iPlayer.getTeam().equals(playerTeam)) {
                 return iPlayer;
             }
         }
@@ -187,6 +187,10 @@ public class Game {
         player.win();
         partner.win();
         roundsPlayed++;
+    }
+
+    public Hand getTableHand() {
+        return tableHand;
     }
 
 
