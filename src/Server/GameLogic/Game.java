@@ -39,7 +39,10 @@ public class Game {
     private Hashtable<ClientDispatcher, Hand> players;
     private Hand tableHand; //SHARED MUTABLE STATE
     private int roundsPlayed;
-
+    private long lastCommandTime;
+    private long waitTime = 10000;
+    private long endtime = lastCommandTime + waitTime;
+    //private long timeSinceLastCommand = System.currentTimeMillis() - lastCommandTime;
 
     public void init() {
         chat = new Chat1(this);
@@ -71,21 +74,14 @@ public class Game {
         while (!isTurnOver()) {
 
             keepProcessingTrades();
-
-            if (turnCycles < 2) {
-                if (askPlayersCanEndTurn()) {
-                    startNewTurn();
-                }
-                turnCycles++;
-                continue;
-            }
-            startNewTurn();
         }
+
     }*/
 
   /*  private boolean askPlayersCanEndTurn() {
 
     }*/
+
 
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
@@ -153,7 +149,18 @@ public class Game {
     }
 
     private void keepProcessingTrades() {
-        throw new UnsupportedOperationException();
+    
+        try {
+            wait(10000);
+            if (endtime() >= 10000) {
+                System.out.println("STARTTING A NEW TURN!");
+                startNewTurn();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        
     }
 
     /**
@@ -169,7 +176,18 @@ public class Game {
             return false;
         }
         tableHand.getActiveCards().add(playerCard);
+        chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
+        
+        
+        long curTime = System.currentTimeMillis();
+        System.out.println( "CURTIME IS: " + curTime);
+       // System.out.println("time since last command is: " + timeSinceLastCommand);
+        
+        resetLastCommandTime(curTime);
+        //System.out.println("AND NOW time since last command is**: " + timeSinceLastCommand);
+        System.out.println("A card was changed");
         return true;
+        
     }
 
 
@@ -220,6 +238,13 @@ public class Game {
     public Hand getTableHand() {
         return tableHand;
     }
-
-
+    
+    public long getLastCommandTime () {
+        return lastCommandTime;
+    }
+    
+    public void resetLastCommandTime (long timeLastCommand) {
+        this.lastCommandTime = timeLastCommand;
+    }
+    
 }
