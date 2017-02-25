@@ -21,7 +21,6 @@ public class Chat1 {
     private int connectedUsers = 0;
     private ServerSocket serverSocket;
 
-
     public Chat1(Game game) {
 
         this.game = game;
@@ -45,9 +44,6 @@ public class Chat1 {
 
                 connectedUsers++;
                 initClientDispatcher(clientSocket);
-                if(connectedUsers == 4){
-                    setSignal(); //TODO: setSignal()
-                }
             }
 
         } catch (IOException e) {
@@ -134,5 +130,11 @@ public class Chat1 {
 
     public void endGame(ClientDispatcher player, String endGameCommand){
         game.endGame(player, endGameCommand);
+    }
+
+
+
+    public int getConnectedUsers() {
+        return connectedUsers;
     }
 }
