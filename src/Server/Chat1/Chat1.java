@@ -78,12 +78,10 @@ public class Chat1 {
             System.out.println("Max users limit achieved.");
             try {
                 Thread.sleep(10000);
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            game.startNewGame();
+                game.startNewGame();
         }
     }
 

@@ -77,7 +77,7 @@ public class Messager {
                 "KNEEL BEFORE THE NEW KAMES KINGS!";
     }
 
-    public static String getChatStartingNewTurnMessage() {
-        return "---- STARTING A NEW TURN ----";
+    public static String getChatGameStartMessage() {
+        return "----- PREPARE YOURSELVES, GAME IS STARTING -----";
     }
 }
