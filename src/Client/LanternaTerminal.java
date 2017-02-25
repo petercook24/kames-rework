@@ -54,19 +54,19 @@ import com.googlecode.lanterna.terminal.Terminal;
         
         
         public void drawTable(String[] cards){
-            screen.putString(15,3,cards[0], Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(17,3,cards[1], Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(15,5,cards[2], Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(17,5,cards[3], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(15,4,cards[0], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(18,4,cards[1], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(21,4,cards[2], Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(24,4,cards[3], Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.refresh();
             
         }
         
         public void drawPlayerHand(String[] cards){
             screen.putString(15,15,cards[0],Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(19,15,cards[1],Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(22,15,cards[2],Terminal.Color.WHITE, Terminal.Color.BLACK);
-            screen.putString(25,15,cards[3],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(18,15,cards[1],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(21,15,cards[2],Terminal.Color.WHITE, Terminal.Color.BLACK);
+            screen.putString(24,15,cards[3],Terminal.Color.WHITE, Terminal.Color.BLACK);
             screen.refresh();
         }
         

@@ -68,8 +68,8 @@ public class Messager {
         return "---- TABLE CARDS CLEARED -----";
     }
 
-    public static String getChatCardsOnTableMessage(String cardsValues) {
-        return "TABLE CARDS: " + cardsValues;
+    public static String getChatCardsOnTagbleMessage(String cardsValues) {
+        return "TABLE CARDS:" + cardsValues;
     }
 
     public static String getChatWinningTeamMessage(String team) {
