@@ -38,7 +38,7 @@ public class Chat1 {
     public void startChat() {
 
         try {
-            while (true) {
+            while (connectedUsers < MAX_USERS) {
 
                 Socket clientSocket = serverSocket.accept();//Blocks while waiting for a client connection
                 System.out.println("connection established to IP: " + clientSocket.getInetAddress());
