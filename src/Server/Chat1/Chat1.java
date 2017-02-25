@@ -162,6 +162,8 @@ public class Chat1 {
         synchronized (game.getTableHand()) {
             game.switchTableCardWith(tableCard, playerCard);
         }
+        player.sendMessage(Messager.getClientYourHandIsMessage(playerHand.toString()));
+
     }
 
     private boolean playerHasCard(String playerCardValue, Hand playerHand) {
