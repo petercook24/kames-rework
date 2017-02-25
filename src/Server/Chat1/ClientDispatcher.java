@@ -104,11 +104,13 @@ public class ClientDispatcher implements Runnable {
 
             case "/K":
             case "/C":
-                chat1.broadcast(msg);
+                System.out.println("KAMES OR CORTA RECEIVED");
+                chat1.broadcast(Messager.getChatKamesMessage(command, nickName, team));
                 chat1.endGame(this, command);
                 break;
 
             case "/S":
+                System.out.println("/S COMMAND RECEIVED");
                 String tableCard = msg.split(" ")[1];
                 String playerCard = msg.split(" ")[2];
                 chat1.switchTableCardWith(tableCard, playerCard, this);
@@ -168,11 +170,11 @@ public class ClientDispatcher implements Runnable {
 
     public void setSignal(){
 
-        sendMessage("you are now talking to your parter to make signal for X seconds");
-
         long curTime= System.currentTimeMillis();
         long duration = 100000;
         long endTime = curTime + duration;
+
+        sendMessage("you are now talking to your parter to make signal for " + (duration/1000) + " seconds");
 
         while (System.currentTimeMillis() <= endTime){
 

@@ -30,7 +30,7 @@ public class Messager {
     }
 
     public static String getChatUserSaidMessage(String nickname, String msg) {
-        return nickname + " said: " + msg;
+        return "< " + nickname + " > " + msg;
     }
 
     public static String getChatDisconnectedMessage(String nickName) {
@@ -49,4 +49,14 @@ public class Messager {
         return "message sent to: " + nickname;
     }
 
+    public static String getChatKamesMessage(String command, String nickName, String team) {
+        if (command.equals("/C")) {
+            return "----- " + team + "- " + nickName + " IS CORTATING";
+        }
+        return "----- " + team + "- " + nickName + " SHOUTED KAMES!";
+    }
+
+    public static String getChatLastCardIsMessage(String cardValue) {
+        return "FORBIDDEN CARD IS --> " + cardValue + " ** BEWARE!";
+    }
 }

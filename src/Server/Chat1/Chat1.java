@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class Chat1 {
 
     public static final int PORT = 8080;
-    public static final int MAX_USERS = 3;
+    public static final int MAX_USERS = 4;
 
     private Game game;
     private int connectedUsers = 0;
@@ -106,8 +106,8 @@ public class Chat1 {
 
             for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
 
-                if (iClientDispatcher.getTeam() == team) {
-                    iClientDispatcher.sendMessage(message);
+                if (iClientDispatcher.getTeam().equals(team)) {
+                    iClientDispatcher.sendMessage(Messager.getClientPrivateMessage(team, message));
                 }
             }
         }

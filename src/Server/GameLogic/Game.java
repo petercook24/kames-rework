@@ -2,8 +2,10 @@ package Server.GameLogic;
 
 import Server.Chat1.ClientDispatcher;
 import Server.Chat1.Chat1;
+import Server.Chat1.Messager;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Set;
 
 /**
@@ -35,7 +37,7 @@ public class Game {
 
     private Chat1 chat;
     private Deck deck;
-    private HashMap<ClientDispatcher, Hand> players;
+    private Hashtable<ClientDispatcher, Hand> players;
     private Hand tableHand; //SHARED MUTABLE STATE
     private int roundsPlayed;
 
@@ -43,7 +45,7 @@ public class Game {
     public void init() {
         chat = new Chat1(this);
         deck = new Deck();
-        players = new HashMap<>(4);// Inits a map for 4 players
+        players = new Hashtable<>(4);// Inits a map for 4 players
         tableHand = new Hand();
         chat.startChat(); //STARTS THE CHAT
     }
@@ -102,8 +104,9 @@ public class Game {
         }
     }
 
-    private String showForbiddenCard() {
-        return deck.showLastCard().getValue();
+    private void showForbiddenCard() {
+        String cardValue = deck.showLastCard().getValue();
+        chat.broadcast(Messager.getChatLastCardIsMessage(cardValue));
     }
 
     private void giveInitialCardsToPlayers() {
@@ -145,7 +148,7 @@ public class Game {
     }
 
 
-    public HashMap<ClientDispatcher, Hand> getPlayersMap() {
+    public Hashtable<ClientDispatcher, Hand> getPlayersMap() {
         return players;
     }
 
