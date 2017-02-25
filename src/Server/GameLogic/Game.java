@@ -117,7 +117,7 @@ public class Game {
             Hand playerHand = getPlayersMap().get(iPlayer);
             deck.give4CardsTo(playerHand);
 
-            iPlayer.sendMessage("CARDS RECEIVED --> " + playerHand.toString());
+            iPlayer.sendMessage(Messager.getClientCardsReceivedMessage(playerHand.toString()));
         }
     }
 

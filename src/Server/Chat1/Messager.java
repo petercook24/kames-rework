@@ -59,4 +59,8 @@ public class Messager {
     public static String getChatLastCardIsMessage(String cardValue) {
         return "FORBIDDEN CARD IS --> " + cardValue + " ** BEWARE!";
     }
+
+    public static String getClientCardsReceivedMessage(String cardsValues) {
+        return "CARDS RECEIVED -->" + cardsValues;
+    }
 }

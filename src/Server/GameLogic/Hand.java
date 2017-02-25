@@ -34,7 +34,6 @@ public class Hand {
 
     public void receiveCard(Card card) {
         activeCards.add(card);
-        System.out.println("CARD RECEIVED --> " + card.getValue());
     }
 
     @Override
@@ -43,7 +42,7 @@ public class Hand {
         String cardsValues = "";
 
         for (Card iCard : activeCards) {
-            cardsValues += iCard.getValue();
+            cardsValues += " " + iCard.getValue();
         }
         return cardsValues;
     }
