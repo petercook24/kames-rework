@@ -71,4 +71,9 @@ public class Messager {
     public static String getChatCardsOnTableMessage(String cardsValues) {
         return "TABLE CARDS: " + cardsValues;
     }
+
+    public static String getChatWinningTeamMessage(String team) {
+        return "WINNING TEAM IS *** " + team + " *** \n" +
+                "KNEEL BEFORE THE NEW KAMES KINGS!";
+    }
 }

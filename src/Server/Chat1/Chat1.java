@@ -87,31 +87,6 @@ public class Chat1 {
         }
     }
 
-    public boolean clientExists(String userName) {
-
-        synchronized (game.getPlayersMap()) {
-
-            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
-                if (iClientDispatcher.getNickName().equals(userName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /*TODO não percebo em que circunstância poderemos querer mandar uma PM para alguém. Acho que o que queres
-    neste método é enviar a mensagem para o teu parceiro de equipa certo? Até porque o tem Dispatcher só tem
-    como propriedade a String team. Acho que só te deves ter te esquecido de alterar isto mas confirma sff ;)
-    De qualquer forma eu km preciso de um método para enviar mensagem para a equipa vou adiciona-lo por baixo.
-    */
-
-
-    public void sendPrivateMessageTo(String nickName, String message) {
-
-        ClientDispatcher userCD = getUserClientDispatcher(nickName);
-        userCD.sendMessage(Messager.getClientPrivateMessage(nickName, message));
-    }
 
     public void sendTeamMessage(String team, String message) {
 
@@ -163,7 +138,7 @@ public class Chat1 {
     }
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
-        game.endGame(player, endGameCommand);
+        game.endRound(player, endGameCommand);
     }
 
 
