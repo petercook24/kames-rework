@@ -167,7 +167,7 @@ public class ClientDispatcher implements Runnable {
     public void setSignal(){
 
         long curTime= System.currentTimeMillis();
-        long duration = 10000;
+        long duration = 100000;
         long endTime = curTime + duration;
 
         sendMessage("you are now talking to your parter to make signal for X seconds");
@@ -179,7 +179,8 @@ public class ClientDispatcher implements Runnable {
                 if (in.ready()) {
                     System.out.println("here");
                     String msg = in.readLine(); //I need this method to be non blocking
-                    chat1.sendPrivateMessageTo(this.nickName, msg);
+                    chat1.sendTeamMessage(this.team,msg);
+                    System.out.println("team message sent!");
                 }
 
             } catch (IOException e) {
