@@ -88,4 +88,8 @@ public class Messager {
     public static String getChatWinnerMessage(String team, int roundsWon) {
         return "TEAM "+ team + " WINS!!! " + team + "victories: " + roundsWon;
     }
+
+    public static String getClientYourHandIsMessage(String cardsValues) {
+        return "YOUR HAND IS: " + cardsValues;
+    }
 }

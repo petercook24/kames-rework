@@ -53,14 +53,14 @@ public class Game {
 
     public void startNewGame() {
 
+        chat.broadcast(Messager.getChatGameStartMessage());
+
         try {
             Thread.sleep(3000);
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        chat.broadcast(Messager.getChatGameStartMessage());
 
         deck = new Deck();
         tableHand = new Hand();
