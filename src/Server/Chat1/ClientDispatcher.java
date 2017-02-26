@@ -73,7 +73,7 @@ public class ClientDispatcher implements Runnable {
                 }
 
                 //IF MESSAGE IS REGULAR
-                chat1.broadcast(Messager.getChatUserSaidMessage(nickName, msg));
+                chat1.broadcastExcept(this.getNickName(),Messager.getChatUserSaidMessage(nickName, msg));
                 msg = in.readLine(); //Blocks while waiting for client's message
             }
 
@@ -176,10 +176,10 @@ public class ClientDispatcher implements Runnable {
     public void setSignal() {
 
         long curTime = System.currentTimeMillis();
-        long duration = 10000;
+        long duration = 20000;
         long endTime = curTime + duration;
 
-        sendMessage("you are now talking to your partner to make signal for " + (duration / 1000) + " seconds");
+        sendMessage("You are now talking to your partner to arrange a signal. You have" + (duration / 1000) + " seconds");
 
         while (System.currentTimeMillis() <= endTime) {
 

@@ -37,7 +37,7 @@ public class Game {
 
 
     public static final int ROUNDS_TO_WIN = 4;
-    public static final long WAIT_TIME_BETWEEN_TURNS = 20000;
+    public static final long WAIT_TIME_BETWEEN_TURNS = 30000;
 
     private Chat1 chat;
     private Deck deck;
@@ -168,12 +168,9 @@ public class Game {
     }
 
     private void keepProcessingTrades() {
-        System.out.println(getPlayersSet());
-    
+        
         for (ClientDispatcher iPlayer : getPlayersSet()) {
-    
-            System.out.println(iPlayer.getOut().checkError());
-
+            
             if (iPlayer.getOut().checkError()){
                 System.out.println("A player disconnected");
                 chat.broadcast("One player disconnected. Server shut down. Game closed");
@@ -183,7 +180,7 @@ public class Game {
         }
 
         try {
-            Thread.sleep(5000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

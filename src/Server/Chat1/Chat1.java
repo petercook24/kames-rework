@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class Chat1 {
 
     public static final int PORT = 8080;
-    public static final int MAX_USERS = 4;
+    public static final int MAX_USERS = 2;
 
     private Game game;
     private int connectedUsers = 0;
@@ -59,6 +59,22 @@ public class Chat1 {
 
             for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
 
+                iClientDispatcher.sendMessage(msg);
+                System.out.println(Messager.getServerSentMessage(iClientDispatcher.getNickName()));
+            }
+        }
+    }
+    
+    public void broadcastExcept(String nickname , String msg) {
+        
+        synchronized (game.getPlayersMap()) {
+            
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
+                
+                if (iClientDispatcher.getNickName().equals(nickname)){
+                    continue;
+                }
+                
                 iClientDispatcher.sendMessage(msg);
                 System.out.println(Messager.getServerSentMessage(iClientDispatcher.getNickName()));
             }
@@ -152,7 +168,7 @@ public class Chat1 {
         Card tableCard;
 
         if (!playerHasCard(playerCardValue, playerHand) || !tableHasCard(tableCardValue)) {
-            broadcast("PLAY NOT VALID");
+            player.sendMessage("PLAY NOT VALID");
             return;
         }
 
@@ -164,7 +180,9 @@ public class Chat1 {
             game.updatePlayerHand(player.getNickName(),tableCard,playerCard);
 
         }
+        player.sendMessage("Your traded was succesfull!");
         player.sendMessage(Messager.getClientYourHandIsMessage(playerHand.toString()));
+        broadcastExcept(player.getNickName() , player.getNickName() + " traded " + playerCard.getValue() + " for " + tableCard.getValue());
 
     }
 
