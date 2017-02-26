@@ -93,7 +93,7 @@ public class Chat1 {
         if (connectedUsers == MAX_USERS) {
             System.out.println("Max users limit achieved.");
             try {
-                Thread.sleep(10000);
+                Thread.sleep(20000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -168,7 +168,7 @@ public class Chat1 {
         Card tableCard;
 
         if (!playerHasCard(playerCardValue, playerHand) || !tableHasCard(tableCardValue)) {
-            player.sendMessage("PLAY NOT VALID");
+            player.sendMessage("\n"+"PLAY NOT VALID"+"\n");
             return;
         }
 

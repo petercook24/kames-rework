@@ -77,11 +77,11 @@ public class Messager {
     }
 
     public static String getClientCardsReceivedMessage(String cardsValues) {
-        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "CARDS RECEIVED -->" + cardsValues + ANSI_RESET+"\n";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "CARDS RECEIVED -->" + cardsValues + ANSI_RESET;
     }
 
     public static String getChatTableCardsClearedMessage() {
-        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "---- TABLE CARDS CLEARED -----" +ANSI_RESET+"\n";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "---- TABLE CARDS CLEARED -----" +ANSI_RESET;
     }
 
     public static String getChatCardsOnTableMessage(String cardsValues) {
