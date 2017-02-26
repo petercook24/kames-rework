@@ -5,6 +5,21 @@ package Server.Chat1;
  */
 public class Messager {
 
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+    public static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    public static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+    public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+    public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+
     public static String getClientNoUserErrorMessage() {
         return "no PM <nickname> inserted. To send a private message: PM <nickname> <msg>";
     }
@@ -14,7 +29,7 @@ public class Messager {
     }
 
     public static String getClientDisconnectedMessage() {
-        return "YOU DISCONNECTED FROM THE SERVER";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "YOU DISCONNECTED FROM THE SERVER" + ANSI_RESET;
     }
 
     public static String getClientPrivateMessage(String nickName, String msg) {
@@ -22,11 +37,11 @@ public class Messager {
     }
 
     public static String getClientInsertNickNameMessage() {
-        return "Please insert your nickname: ";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "Please insert your nickname: " + ANSI_RESET;
     }
 
     public static String getChatWelcomeMessage(String nickName) {
-        return "----NEW USER JOINED SERVER --> " + nickName;
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "----NEW USER JOINED SERVER --> " + nickName + ANSI_RESET;
     }
 
     public static String getChatUserSaidMessage(String nickname, String msg) {
@@ -34,7 +49,7 @@ public class Messager {
     }
 
     public static String getChatDisconnectedMessage(String nickName) {
-        return "----" + nickName + " DISCONNECTED ----";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "----" + nickName + " DISCONNECTED ----" + ANSI_RESET;
     }
 
     public static String getServerDisconnectedMessage(String nickName) {
@@ -51,25 +66,25 @@ public class Messager {
 
     public static String getChatKamesMessage(String command, String nickName, String team) {
         if (command.equals("/C")) {
-            return "----- " + team + "- " + nickName + " IS CORTATING";
+            return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "----- " + team + "- " + nickName + " IS CORTATING"+ ANSI_RESET+"\n" ;
         }
-        return "----- " + team + "- " + nickName + " SHOUTED KAMES!";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "----- " + team + "- " + nickName + " SHOUTED KAMES!" + ANSI_RESET+"\n";
     }
 
     public static String getChatLastCardIsMessage(String cardValue) {
-        return "FORBIDDEN CARD IS --> " + cardValue + " ** BEWARE!";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "FORBIDDEN CARD IS --> " + cardValue + " ** BEWARE!" +ANSI_RESET;
     }
 
     public static String getClientCardsReceivedMessage(String cardsValues) {
-        return "CARDS RECEIVED -->" + cardsValues;
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "CARDS RECEIVED -->" + cardsValues + ANSI_RESET;
     }
 
     public static String getChatTableCardsClearedMessage() {
-        return "---- TABLE CARDS CLEARED -----";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "---- TABLE CARDS CLEARED -----" +ANSI_RESET;
     }
 
     public static String getChatCardsOnTableMessage(String cardsValues) {
-        return "TABLE CARDS:" + cardsValues;
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "TABLE CARDS:" + cardsValues + ANSI_RESET;
     }
 
     public static String getChatWinningTeamMessage(String team) {
@@ -78,11 +93,11 @@ public class Messager {
     }
 
     public static String getChatGameStartMessage() {
-        return "----- PREPARE YOURSELVES, GAME IS STARTING -----";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "----- PREPARE YOURSELVES, GAME IS STARTING -----" + ANSI_RESET;
     }
 
     public static String getChatNoMoreCardsOnDeckMEssage(int deckSize) {
-        return "THERE ARE " + deckSize + " CARDS LEFT ON THE DECK!";
+        return ANSI_PURPLE_BACKGROUND + ANSI_GREEN + "THERE ARE " + deckSize + " CARDS LEFT ON THE DECK!" + ANSI_RESET;
     }
 
     public static String getChatWinnerMessage(String team, int roundsWon) {
