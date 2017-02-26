@@ -38,6 +38,10 @@ public class Hand {
         activeCards.add(card);
     }
 
+    public void removeCard(Card card){
+        activeCards.remove(card);
+    }
+
     @Override
     public String toString(){
 

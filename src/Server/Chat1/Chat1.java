@@ -161,6 +161,8 @@ public class Chat1 {
 
         synchronized (game.getTableHand()) {
             game.switchTableCardWith(tableCard, playerCard);
+            game.updatePlayerHand(player.getNickName(),tableCard,playerCard);
+
         }
         player.sendMessage(Messager.getClientYourHandIsMessage(playerHand.toString()));
 

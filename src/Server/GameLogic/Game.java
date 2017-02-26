@@ -36,7 +36,7 @@ public class Game {
 
 
     public static final int ROUNDS_TO_WIN = 4;
-    public static final long WAIT_TIME_BETWEEN_TURNS = 10000;
+    public static final long WAIT_TIME_BETWEEN_TURNS = 20000;
 
     private Chat1 chat;
     private Deck deck;
@@ -146,6 +146,17 @@ public class Game {
             deck.give4CardsTo(tableHand);
         }
         chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
+
+
+        //inform players of what are their cards. Just to be easier to play/test for now
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+
+            Hand playerHand = getPlayersMap().get(iPlayer);
+
+            iPlayer.sendMessage(Messager.getClientYourHandIsMessage(playerHand.toString()));
+
+
+        }
     }
 
 
@@ -266,6 +277,24 @@ public class Game {
             }
         }
         System.err.println("SOMETHING REALLY WRONG ENDING GAME WHEN WINNER WAS FOUND");
+    }
+
+    public void updatePlayerHand(String nickname, Card cardToAdd, Card cardToRemove){
+
+        for (ClientDispatcher iPlayer : getPlayersSet()){
+
+            if (iPlayer.getNickName().equals(nickname)){
+
+                Hand playerHand = getPlayersMap().get(iPlayer);
+
+                playerHand.receiveCard(cardToAdd);
+                playerHand.removeCard(cardToRemove);
+
+
+            }
+
+        }
+
     }
 
 }
