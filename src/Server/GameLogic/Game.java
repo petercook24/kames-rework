@@ -4,6 +4,7 @@ import Server.Chat1.ClientDispatcher;
 import Server.Chat1.Chat1;
 import Server.Chat1.Messager;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.util.Hashtable;
 import java.util.Set;
@@ -71,7 +72,6 @@ public class Game {
 
 
     private void startNewTurn() {
-
         if (isWinnerFound()) {
             endGame();
         }
@@ -168,6 +168,19 @@ public class Game {
     }
 
     private void keepProcessingTrades() {
+        System.out.println(getPlayersSet());
+    
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+    
+            System.out.println(iPlayer.getOut().checkError());
+
+            if (iPlayer.getOut().checkError()){
+                System.out.println("A player disconnected");
+                chat.broadcast("One player disconnected. Server shut down. Game closed");
+                System.exit(1);
+                
+            }
+        }
 
         try {
             Thread.sleep(5000);

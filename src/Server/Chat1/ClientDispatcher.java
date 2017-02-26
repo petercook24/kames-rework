@@ -11,20 +11,23 @@ public class ClientDispatcher implements Runnable {
 
     private Chat1 chat1;
     private BufferedReader in;
-    private BufferedWriter out;
+    private PrintWriter out;
     private InetAddress ip; //TODO: DO I REALLY NEED IT?
     private String nickName;
     private String team;
+    private Socket clientSocket;
     private int roundsWon;
 
 
     public ClientDispatcher(Socket clientSocket, Chat1 chat1) {
 
         try {
+            
             this.chat1 = chat1;
+            this.clientSocket = clientSocket;
             roundsWon = 0;
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             ip = clientSocket.getInetAddress();
 
         } catch (IOException e) {
@@ -129,13 +132,13 @@ public class ClientDispatcher implements Runnable {
 
     public void sendMessage(String msg) { // sendMessageToclient.
 
-        try {
+        //try {
             out.write(msg + "\n");
             out.flush();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private boolean isNickNameValid() {
@@ -195,6 +198,14 @@ public class ClientDispatcher implements Runnable {
             }
         }
         System.out.println("done waiting");
+    }
+    
+    public Socket getClientSocket () {
+        return clientSocket;
+    }
+    
+    public PrintWriter getOut () {
+        return out;
     }
 }
 
