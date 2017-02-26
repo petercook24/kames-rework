@@ -3,9 +3,9 @@ package Server.Chat1;
 /**
  * Created by peter on 17-02-2017.
  */
-public class Messager {
 
-    public static final String ANSI_RESET = "\u001B[0m";
+public class Messager {
+    public static final String ANSI_RESET = " \u001B[0m";
     public static final String ANSI_BLUE = "\u001B[44m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_WHITE = "\u001B[37m";
