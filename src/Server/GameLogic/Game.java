@@ -2,8 +2,11 @@ package Server.GameLogic;
 
 import Server.Chat1.ClientDispatcher;
 import Server.Chat1.Chat1;
+import Server.Chat1.Messager;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.util.Hashtable;
 import java.util.Set;
 
 /**
@@ -33,25 +36,35 @@ import java.util.Set;
 public class Game {
 
 
+    public static final int ROUNDS_TO_WIN = 4;
+    public static final long WAIT_TIME_BETWEEN_TURNS = 30000;
+
     private Chat1 chat;
     private Deck deck;
-    private HashMap<ClientDispatcher, Hand> players;
+    private Hashtable<ClientDispatcher, Hand> players;
     private Hand tableHand; //SHARED MUTABLE STATE
-    private int roundsPlayed;
-
+    private long lastCommandTime;
 
     public void init() {
         chat = new Chat1(this);
-        deck = new Deck();
-        players = new HashMap<>(4);// Inits a map for 4 players
-        tableHand = new Hand();
+        players = new Hashtable<>(4);// Inits a map for 4 players
         chat.startChat(); //STARTS THE CHAT
     }
 
 
     public void startNewGame() {
 
-        roundsPlayed = 0;
+        chat.broadcast(Messager.getChatGameStartMessage());
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        deck = new Deck();
+        tableHand = new Hand();
         showForbiddenCard();
         giveInitialCardsToPlayers();
         startNewTurn();
@@ -59,17 +72,19 @@ public class Game {
 
 
     private void startNewTurn() {
+        if (isWinnerFound()) {
+            endGame();
+        }
 
         burnTableHand();
         drawTableCards();
-        while (!isTurnOver()) {
-            keepProcessingTrades();//este metodo pode ter um nome melhor! SERÁ AQUI UM DO PRROBS DO MULTITHREADING?
-        }
+        resetLastCommandTime();
+        keepProcessingTrades();
         startNewTurn();
     }
 
 
-    public void endGame(ClientDispatcher player, String endGameCommand) {
+    public void endRound(ClientDispatcher player, String endGameCommand) {
 
         ClientDispatcher enemy1 = null;
         ClientDispatcher enemy2 = null;
@@ -102,30 +117,77 @@ public class Game {
         }
     }
 
-    private String showForbiddenCard() {
-        return deck.showLastCard().getValue();
+    private void showForbiddenCard() {
+        String cardValue = deck.showLastCard().getValue();
+        chat.broadcast(Messager.getChatLastCardIsMessage(cardValue));
     }
+
 
     private void giveInitialCardsToPlayers() {
         for (ClientDispatcher iPlayer : getPlayersSet()) {
-            deck.give4CardsTo(getPlayersMap().get(iPlayer));
+
+            Hand playerHand = getPlayersMap().get(iPlayer);
+            deck.give4CardsTo(playerHand);
+
+            iPlayer.sendMessage(Messager.getClientCardsReceivedMessage(playerHand.toString()));
+
+
         }
     }
 
     private void drawTableCards() {
-        deck.give4CardsTo(tableHand);
+
+        if (deck.getDeckSize() <= 3) {
+            chat.broadcast(Messager.getChatNoMoreCardsOnDeckMEssage(deck.getDeckSize()));
+            return;
+        }
+
+        synchronized (tableHand) {
+            deck.give4CardsTo(tableHand);
+        }
+        chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
+
+
+        //inform players of what are their cards. Just to be easier to play/test for now
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+
+            Hand playerHand = getPlayersMap().get(iPlayer);
+
+            iPlayer.sendMessage(Messager.getClientYourHandIsMessage(playerHand.toString()));
+
+
+        }
     }
+
 
     private void burnTableHand() {
-        tableHand.clear();
-    }
-
-    private boolean isTurnOver() {
-        throw new UnsupportedOperationException();
+        synchronized (tableHand) {
+            tableHand.clear();
+        }
+        chat.broadcast(Messager.getChatTableCardsClearedMessage());
     }
 
     private void keepProcessingTrades() {
-        throw new UnsupportedOperationException();
+        
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+            
+            if (iPlayer.getOut().checkError()){
+                System.out.println("A player disconnected");
+                chat.broadcast("One player disconnected. Server shut down. Game closed");
+                System.exit(1);
+                
+            }
+        }
+
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (System.currentTimeMillis() - lastCommandTime < WAIT_TIME_BETWEEN_TURNS) {
+            keepProcessingTrades();
+            return;
+        }
     }
 
     /**
@@ -141,17 +203,22 @@ public class Game {
             return false;
         }
         tableHand.getActiveCards().add(playerCard);
+        chat.broadcast(Messager.getChatCardsOnTableMessage(tableHand.toString()));
+
+        resetLastCommandTime();
+        System.out.println("A card was changed");
         return true;
+
     }
 
-
-    public HashMap<ClientDispatcher, Hand> getPlayersMap() {
+    public Hashtable<ClientDispatcher, Hand> getPlayersMap() {
         return players;
     }
 
     public Set<ClientDispatcher> getPlayersSet() {
         return players.keySet();
     }
+
 
     private boolean hasKames(ClientDispatcher player) {
 
@@ -182,16 +249,62 @@ public class Game {
         return null;
     }
 
-
     private void winRound(ClientDispatcher player, ClientDispatcher partner) {
+
+        chat.broadcast(Messager.getChatWinnerMessage(player.getTeam(), player.getRoundsWon()));
         player.win();
         partner.win();
-        roundsPlayed++;
+        startNewGame();
     }
 
     public Hand getTableHand() {
         return tableHand;
     }
 
+
+    public void resetLastCommandTime() {
+        lastCommandTime = System.currentTimeMillis();
+    }
+
+    private boolean isWinnerFound() {
+
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+
+            if (iPlayer.getRoundsWon() == ROUNDS_TO_WIN) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void endGame() {
+
+        for (ClientDispatcher iPlayer : getPlayersSet()) {
+
+            if (iPlayer.getRoundsWon() == ROUNDS_TO_WIN) {
+                chat.broadcast(Messager.getChatWinningTeamMessage(iPlayer.getTeam()));
+                startNewGame();
+            }
+        }
+        System.err.println("SOMETHING REALLY WRONG ENDING GAME WHEN WINNER WAS FOUND");
+    }
+
+    public void updatePlayerHand(String nickname, Card cardToAdd, Card cardToRemove){
+
+        for (ClientDispatcher iPlayer : getPlayersSet()){
+
+            if (iPlayer.getNickName().equals(nickname)){
+
+                Hand playerHand = getPlayersMap().get(iPlayer);
+
+                playerHand.receiveCard(cardToAdd);
+                playerHand.removeCard(cardToRemove);
+
+
+            }
+
+        }
+
+    }
 
 }

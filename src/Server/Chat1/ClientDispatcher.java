@@ -10,23 +10,24 @@ import java.net.Socket;
 public class ClientDispatcher implements Runnable {
 
     private Chat1 chat1;
-    private Socket clientSocket;
     private BufferedReader in;
-    private BufferedWriter out;
+    private PrintWriter out;
     private InetAddress ip; //TODO: DO I REALLY NEED IT?
     private String nickName;
     private String team;
+    private Socket clientSocket;
     private int roundsWon;
 
 
     public ClientDispatcher(Socket clientSocket, Chat1 chat1) {
 
         try {
+            
             this.chat1 = chat1;
             this.clientSocket = clientSocket;
             roundsWon = 0;
             in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+            out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
             ip = clientSocket.getInetAddress();
 
         } catch (IOException e) {
@@ -50,7 +51,7 @@ public class ClientDispatcher implements Runnable {
 
             //clientDispatcher need to hold here to be sure 4 players are connected
 
-            while (chat1.getConnectedUsers() != chat1.MAX_USERS){
+            while (chat1.getConnectedUsers() != chat1.MAX_USERS) {
                 continue;
             }
 
@@ -72,7 +73,7 @@ public class ClientDispatcher implements Runnable {
                 }
 
                 //IF MESSAGE IS REGULAR
-                chat1.broadcast(Messager.getChatUserSaidMessage(nickName, msg));
+                chat1.broadcastExcept(this.getNickName(),Messager.getChatUserSaidMessage(nickName, msg));
                 msg = in.readLine(); //Blocks while waiting for client's message
             }
 
@@ -104,7 +105,8 @@ public class ClientDispatcher implements Runnable {
 
             case "/K":
             case "/C":
-                chat1.broadcast(msg);
+                System.out.println("KAMES OR CORTA RECEIVED");
+                chat1.broadcast(Messager.getChatKamesMessage(command, nickName, team));
                 chat1.endGame(this, command);
                 break;
 
@@ -117,6 +119,7 @@ public class ClientDispatcher implements Runnable {
                 String playerCardValue = msg.split(" ")[2];
                 chat1.switchTableCardWith(tableCardValue, playerCardValue, this);
                 chat1.broadcast(Messager.getChatPlayerTryingToSwitchMessage(nickName, tableCardValue, playerCardValue));
+
 
             case "/HELP":
                 //sendCommandList();
@@ -134,13 +137,13 @@ public class ClientDispatcher implements Runnable {
 
     public void sendMessage(String msg) { // sendMessageToclient.
 
-        try {
+        //try {
             out.write(msg + "\n");
             out.flush();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private boolean isNickNameValid() {
@@ -167,26 +170,30 @@ public class ClientDispatcher implements Runnable {
         return team;
     }
 
+    public int getRoundsWon() {
+        return roundsWon;
+    }
+
     public void win() {
         roundsWon++;
     }
 
-    public void setSignal(){
+    public void setSignal() {
 
-        sendMessage("you are now talking to your parter to make signal for X seconds");
-
-        long curTime= System.currentTimeMillis();
-        long duration = 100000;
+        long curTime = System.currentTimeMillis();
+        long duration = 20000;
         long endTime = curTime + duration;
 
-        while (System.currentTimeMillis() <= endTime){
+        sendMessage("You are now talking to your partner to arrange a signal. You have" + (duration / 1000) + " seconds");
+
+        while (System.currentTimeMillis() <= endTime) {
 
             try {
 
                 if (in.ready()) {
                     System.out.println("here");
                     String msg = in.readLine(); //I need this method to be non blocking
-                    chat1.sendTeamMessage(this.team,msg);
+                    chat1.sendTeamMessage(team, msg);
                     System.out.println("team message sent!");
 
                 }
@@ -194,13 +201,16 @@ public class ClientDispatcher implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
-
         System.out.println("done waiting");
-
-
+    }
+    
+    public Socket getClientSocket () {
+        return clientSocket;
+    }
+    
+    public PrintWriter getOut () {
+        return out;
     }
 }
 

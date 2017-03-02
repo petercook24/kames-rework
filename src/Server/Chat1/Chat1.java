@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 public class Chat1 {
 
     public static final int PORT = 8080;
-    public static final int MAX_USERS = 3;
+    public static final int MAX_USERS = 2;
 
     private Game game;
     private int connectedUsers = 0;
@@ -38,7 +38,7 @@ public class Chat1 {
     public void startChat() {
 
         try {
-            while (true) {
+            while (connectedUsers < MAX_USERS) {
 
                 Socket clientSocket = serverSocket.accept();//Blocks while waiting for a client connection
                 System.out.println("connection established to IP: " + clientSocket.getInetAddress());
@@ -46,6 +46,7 @@ public class Chat1 {
                 connectedUsers++;
                 initClientDispatcher(clientSocket);
             }
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,6 +64,22 @@ public class Chat1 {
             }
         }
     }
+    
+    public void broadcastExcept(String nickname , String msg) {
+        
+        synchronized (game.getPlayersMap()) {
+            
+            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
+                
+                if (iClientDispatcher.getNickName().equals(nickname)){
+                    continue;
+                }
+                
+                iClientDispatcher.sendMessage(msg);
+                System.out.println(Messager.getServerSentMessage(iClientDispatcher.getNickName()));
+            }
+        }
+    }
 
     private void initClientDispatcher(Socket clientSocket) {
 
@@ -72,42 +89,27 @@ public class Chat1 {
 
         ExecutorService pool = Executors.newFixedThreadPool(MAX_USERS);
         pool.submit(clientDispatcher);
-    }
 
-    public boolean clientExists(String userName) {
-
-        synchronized (game.getPlayersMap()) {
-
-            for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
-                if (iClientDispatcher.getNickName().equals(userName)) {
-                    return true;
-                }
+        if (connectedUsers == MAX_USERS) {
+            System.out.println("Max users limit achieved.");
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+            game.startNewGame();
         }
-        return false;
     }
 
-    /*TODO não percebo em que circunstância poderemos querer mandar uma PM para alguém. Acho que o que queres
-    neste método é enviar a mensagem para o teu parceiro de equipa certo? Até porque o tem Dispatcher só tem
-    como propriedade a String team. Acho que só te deves ter te esquecido de alterar isto mas confirma sff ;)
-    De qualquer forma eu km preciso de um método para enviar mensagem para a equipa vou adiciona-lo por baixo.
-    */
 
-
-    public void sendPrivateMessageTo(String nickName, String message) {
-
-        ClientDispatcher userCD = getUserClientDispatcher(nickName);
-        userCD.sendMessage(Messager.getClientPrivateMessage(nickName, message));
-    }
-
-    public void sendTeamMessage(String team , String message){
+    public void sendTeamMessage(String team, String message) {
 
         synchronized (game.getPlayersMap()) {
 
             for (ClientDispatcher iClientDispatcher : game.getPlayersSet()) {
 
-                if (iClientDispatcher.getTeam() == team) {
-                    iClientDispatcher.sendMessage(message);
+                if (iClientDispatcher.getTeam().equals(team)) {
+                    iClientDispatcher.sendMessage(Messager.getClientPrivateMessage(team, message));
                 }
             }
         }
@@ -150,7 +152,7 @@ public class Chat1 {
     }
 
     public void endGame(ClientDispatcher player, String endGameCommand) {
-        game.endGame(player, endGameCommand);
+        game.endRound(player, endGameCommand);
     }
 
 
@@ -166,7 +168,7 @@ public class Chat1 {
         Card tableCard;
 
         if (!playerHasCard(playerCardValue, playerHand) || !tableHasCard(tableCardValue)) {
-            broadcast("PLAY NOT VALID");
+            player.sendMessage("\n"+"PLAY NOT VALID"+"\n");
             return;
         }
 
@@ -175,7 +177,13 @@ public class Chat1 {
 
         synchronized (game.getTableHand()) {
             game.switchTableCardWith(tableCard, playerCard);
+            game.updatePlayerHand(player.getNickName(),tableCard,playerCard);
+
         }
+        player.sendMessage("Your traded was succesfull!");
+        player.sendMessage(Messager.getClientYourHandIsMessage(playerHand.toString()));
+        broadcastExcept(player.getNickName() , player.getNickName() + " traded " + playerCard.getValue() + " for " + tableCard.getValue());
+
     }
 
     private boolean playerHasCard(String playerCardValue, Hand playerHand) {
